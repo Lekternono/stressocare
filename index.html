@@ -1,1310 +1,355 @@
 <!DOCTYPE html>
 
 <html lang="fr">
-<<!DOCTYPE html>
-
-<html lang="fr">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <meta name="theme-color" content="#020617"/>
-  <meta name="apple-mobile-web-app-capable" content="yes"/>
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-  <meta name="apple-mobile-web-app-title" content="StressoCare"/>
-  <title>StressoCare</title>
-  <style>
-    *{margin:0;padding:0;box-sizing:border-box}
-    body{background:#020617;font-family:-apple-system,system-ui,sans-serif;color:#F0F9FF;overflow-x:hidden;-webkit-tap-highlight-color:transparent}
-    #root{min-height:100dvh}
-    ::-webkit-scrollbar{width:0;display:none}
-    *{scrollbar-width:none}
-    @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
-    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
-    @keyframes glow{0%,100%{box-shadow:0 0 20px rgba(56,189,248,0.3)}50%{box-shadow:0 0 35px rgba(56,189,248,0.6)}}
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="theme-color" content="#020617"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="StressoCare"/>
+<title>StressoCare</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:#020617;font-family:-apple-system,system-ui,sans-serif;color:#F0F9FF;overflow-x:hidden}
+::-webkit-scrollbar{display:none}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes glow{0%,100%{box-shadow:0 0 20px #38BDF840}50%{box-shadow:0 0 35px #38BDF870}}
+@keyframes fadein{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+#app{min-height:100dvh;display:flex;flex-direction:column}
+.screen{animation:fadein 0.25s ease;flex:1;overflow-y:auto;padding:0 18px 90px;max-width:480px;margin:0 auto;width:100%}
+.card{background:rgba(15,23,42,0.85);border:1px solid rgba(56,189,248,0.15);border-radius:20px;padding:18px;backdrop-filter:blur(20px)}
+.btn-primary{background:linear-gradient(135deg,#38BDF8,#0EA5E9);color:#fff;border:none;border-radius:14px;padding:14px;font-size:15px;font-weight:700;cursor:pointer;width:100%;font-family:inherit}
+.btn-secondary{background:rgba(56,189,248,0.08);color:#CBD5E1;border:1px solid rgba(56,189,248,0.15);border-radius:14px;padding:12px;font-size:13px;font-weight:600;cursor:pointer;width:100%;font-family:inherit}
+.header{position:sticky;top:0;z-index:50;background:rgba(2,6,23,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(56,189,248,0.15);padding:12px 20px}
+.header-inner{display:flex;align-items:center;justify-content:space-between;max-width:480px;margin:0 auto}
+.logo{width:36px;height:36px;border-radius:11px;background:linear-gradient(135deg,#38BDF8,#A78BFA);display:flex;align-items:center;justify-content:center;font-size:18px;animation:glow 3s infinite}
+.nav{position:fixed;bottom:0;left:0;right:0;background:rgba(2,6,23,0.95);backdrop-filter:blur(20px);border-top:1px solid rgba(56,189,248,0.15);padding-bottom:env(safe-area-inset-bottom)}
+.nav-inner{display:flex;max-width:480px;margin:0 auto}
+.nav-btn{flex:1;padding:10px 0;background:transparent;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;font-family:inherit}
+.nav-dot{width:4px;height:4px;border-radius:50%;background:#38BDF8}
+input,textarea{background:rgba(56,189,248,0.06);border:1px solid rgba(56,189,248,0.2);border-radius:12px;padding:13px 16px;color:#F0F9FF;font-size:15px;font-family:inherit;outline:none;width:100%;box-sizing:border-box}
+textarea{resize:none;line-height:1.5}
+.bubble-user{background:linear-gradient(135deg,#38BDF8,#0EA5E9);color:#fff;padding:10px 14px;border-radius:16px 16px 4px 16px;font-size:13px;line-height:1.65;max-width:86%;white-space:pre-wrap;align-self:flex-end}
+.bubble-ai{background:rgba(167,139,250,0.12);color:#CBD5E1;padding:10px 14px;border-radius:16px 16px 16px 4px;font-size:13px;line-height:1.65;max-width:86%;border:1px solid rgba(167,139,250,0.2);white-space:pre-wrap}
+.bubble-ai-pink{background:rgba(244,114,182,0.12);border-color:rgba(244,114,182,0.2)}
+.chip{background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.3);color:#A78BFA;font-size:11px;padding:6px 12px;border-radius:100px;cursor:pointer;font-family:inherit;white-space:nowrap}
+.chip-pink{background:rgba(244,114,182,0.1);border-color:rgba(244,114,182,0.3);color:#F472B6}
+</style>
 </head>
 <body>
-<div id="root"></div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
-<script type="text/babel">
-const { useState, useEffect, useRef } = React;
+<div id="app"></div>
+<script>
+const S={screen:'login',name:'',role:'IDE',nameIn:'',roleIn:'IDE',qi:0,ans:{},slid:5,score:null,aiTxt:'',aiLoading:false,hist:[{date:'28 Avr',sit:'Arret cardiaque',score:58},{date:'21 Avr',sit:'Detresse respiratoire',score:44},{date:'14 Avr',sit:'Infarctus',score:29}],breathPhase:-1,breathCnt:0,breathCyc:0,breathDone:false,jMsgs:[],jIn:'',jLoad:false,cMsgs:[{r:'ai',t:"Bonjour ! Je suis votre assistant. Comment vous sentez-vous ?"}],cIn:'',cLoad:false,gTab:'dash',gSessions:[],gMsgs:[{auth:'IDE #4',txt:'Journee difficile, merci a tous !',time:'18:42',req:false},{auth:'IDE #2',txt:'On est la ! Courage',time:'18:45',req:false}],gIn:'',anon:true,debReq:false,time:'9:41',ansMulti:[]};
 
-const C = {
-bg:”#020617”, cardSolid:”#0F172A”,
-card:“rgba(15,23,42,0.8)”,
-border:“rgba(56,189,248,0.15)”, borderHi:“rgba(56,189,248,0.3)”,
-blue:”#38BDF8”, blueD:”#0EA5E9”,
-green:”#34D399”, orange:”#FB923C”, red:”#F87171”,
-purple:”#A78BFA”, pink:”#F472B6”,
-text:”#F0F9FF”, textB:”#CBD5E1”, textC:”#64748B”, textD:”#334155”,
-};
+const QS=[{id:1,text:“Niveau de stress pendant cette urgence ?”,type:“scale”,min:“Calme”,max:“Intense”,icon:“🌡”},{id:2,text:“Difficultes avec les gestes techniques ?”,type:“choice”,icon:“🩺”,opts:[“Aucune”,“Legeres”,“Importantes”,“Blocage”]},{id:3,text:“Communication avec votre equipe ?”,type:“choice”,icon:“💬”,opts:[“Tres efficace”,“Efficace”,“Peu efficace”,“Absente”]},{id:4,text:“Facteurs de stress identifies ?”,type:“multi”,icon:“🎯”,opts:[“Gravite de la situation”,“Manque experience”,“Regard collegues”,“Isolement”,“Desorganisation”,“Peur erreur”]},{id:5,text:“Comment vous sentez-vous maintenant ?”,type:“emoji”,icon:“💭”,opts:[“😰”,“😟”,“😐”,“🙂”,“💪”]}];
+const PHASES=[{label:“Inspirez”,dur:4,col:”#38BDF8”},{label:“Retenez”,dur:4,col:”#A78BFA”},{label:“Expirez”,dur:6,col:”#34D399”}];
 
-const QS = [
-{id:1,text:“Niveau de stress pendant cette urgence ?”,type:“scale”,min:“Calme”,max:“Intense”,icon:“🌡”},
-{id:2,text:“Difficultés avec les gestes techniques ?”,type:“choice”,icon:“🩺”,opts:[“Aucune”,“Légères”,“Importantes”,“Blocage”]},
-{id:3,text:“Communication avec votre équipe ?”,type:“choice”,icon:“💬”,opts:[“Très efficace”,“Efficace”,“Peu efficace”,“Absente”]},
-{id:4,text:“Facteurs de stress identifiés ?”,type:“multi”,icon:“🎯”,opts:[“Gravité de la situation”,“Manque expérience”,“Regard collègues”,“Isolement”,“Désorganisation”,“Peur erreur”]},
-{id:5,text:“Comment vous sentez-vous maintenant ?”,type:“emoji”,icon:“💭”,opts:[“😰”,“😟”,“😐”,“🙂”,“💪”]},
-];
+function sc2col(s){return s<40?’#34D399’:s<70?’#FB923C’:’#F87171’}
+function today(){const d=new Date();return d.getDate()+’ ’+[‘Jan’,‘Fev’,‘Mar’,‘Avr’,‘Mai’,‘Jun’,‘Jul’,‘Aou’,‘Sep’,‘Oct’,‘Nov’,‘Dec’][d.getMonth()]}
+function go(scr){S.screen=scr;render()}
+function delay(fn,ms){return new Promise(r=>setTimeout(()=>r(fn()),ms+Math.random()*400))}
 
-const SUPPORT = [
-“Prends soin de toi, on est là 💙”,
-“Courage, tu fais un boulot remarquable 🌟”,
-“On traverse ça ensemble 🤝”,
-“Ton ressenti est totalement légitime 🙏”,
-“Chaque urgence nous apprend quelque chose 💪”,
-];
-
-function makeAnalysis(a, sc) {
-const f = a[4] || [];
-let v = sc >= 70
-? “Ce que vous venez de vivre était particulièrement intense. Le ressenti que vous décrivez est tout à fait légitime — cette pression demande énormément sur le plan technique et émotionnel.”
-: sc >= 40
-? “Vous avez traversé une situation exigeante. Le stress ressenti est une réaction normale et saine, témoignant de votre engagement professionnel.”
-: “Vous semblez avoir bien géré cette situation. Votre capacité de régulation émotionnelle est réelle et précieuse dans ce métier.”;
-let an = f.includes(3)
-? “L’isolement ressort comme facteur central. Selon Edmondson, le sentiment d’être seul face à une décision critique amplifie considérablement la charge émotionnelle.”
-: (f.includes(1) && f.includes(5))
-? “Le manque d’expérience couplé à la peur de l’erreur évoque le modèle de Benner : vous êtes dans la phase novice-compétent. Chaque situation vécue et debriefée construit votre expertise.”
-: (f.includes(4) || (a[3]??0) >= 2)
-? “Les difficultés de communication ressortent fortement. Selon Mucchielli, quand la coordination manque, le stress individuel s’intensifie même chez les soignants expérimentés.”
-: “Selon Lazarus et Folkman, votre stress s’inscrit dans une réponse adaptative normale. L’équilibre entre sollicitations et ressources se construit avec l’expérience.”;
-let tips = [];
-if (sc >= 60) tips.push(“Faites un exercice de cohérence cardiaque maintenant — 3 min suffisent”);
-if (f.includes(3)) tips.push(“Identifiez 1-2 collègues vers qui vous tourner lors des prochaines urgences”);
-if (f.includes(4)||(a[3]??0)>=2) tips.push(“Proposez un debriefing collectif à votre cadre pour cette situation”);
-if (!tips.length) tips.push(“Continuez à analyser vos situations — c’est ce qui transforme l’expérience en compétence”);
-return v + “\n\n” + an + “\n\n> “ + tips.slice(0,2).join(”\n> “);
+function makeAnalysis(sc){
+const f=S.ans[4]||[];
+let v=sc>=70?“Ce que vous venez de vivre etait particulierement intense. Votre ressenti est tout a fait legitime.”:sc>=40?“Vous avez traverse une situation exigeante. Le stress ressenti est une reaction normale et saine.”:“Vous semblez avoir bien gere cette situation. Votre capacite de regulation emotionnelle est reelle.”;
+let a=f.includes(3)?“L’isolement ressort comme facteur central. Selon Edmondson, etre seul face a une decision critique amplifie la charge emotionnelle.”:(f.includes(1)&&f.includes(5))?“Le manque d’experience couple a la peur de l’erreur evoque le modele de Benner : chaque situation debriefee construit votre expertise.”:“Selon Lazarus et Folkman, votre stress s’inscrit dans une reponse adaptative normale.”;
+let tip=sc>=60?“→ Faites un exercice de coherence cardiaque maintenant”:“→ Continuez a analyser vos situations, c’est ce qui transforme l’experience en competence.”;
+return v+”\n\n”+a+”\n\n”+tip;
 }
 
-function makeJournalReply(txt) {
-if (/triste|pleur|mort/i.test(txt)) return “La tristesse face à certaines situations n’est pas un défaut professionnel — c’est le signe d’une humanité préservée.\n\nQu’est-ce qui vous a touché le plus dans cette situation ?”;
-if (/fatigu|epuis|crev/i.test(txt)) return “Vos mots laissent transparaître une fatigue qui n’est pas que physique. La nommer est déjà un acte de soin envers vous-même.\n\nDe quoi auriez-vous besoin maintenant pour vous ressourcer ?”;
-if (/doute|capable|nul/i.test(txt)) return “Le doute que vous exprimez est paradoxalement un signe de conscience professionnelle élevée.\n\nIdentifiez une force que vous avez démontrée aujourd’hui.”;
-if (/fier|reussi|content/i.test(txt)) return “Cette satisfaction mérite d’être pleinement accueillie. Ces moments construisent l’efficacité personnelle dont parle Bandura.\n\nComment capitaliser sur ce succès pour la prochaine fois ?”;
-return “Mettre des mots sur ce que l’on traverse est précieux. Selon Schön, c’est cette posture de praticien réflexif qui transforme l’expérience en compétence.\n\nQu’est-ce qui, dans cette situation, mérite d’être retenu ?”;
-}
-
-function makeChatReply(msg) {
-const m = msg.toLowerCase();
-if (/bonjour|salut|hello/.test(m)) return “Bonjour ! Comment vous sentez-vous aujourd’hui ?”;
-if (/depasse|submerge|trop|bout/.test(m)) return “Je vous entends. Quand on se sent dépassé, il faut d’abord se donner la permission de l’être. Qu’est-ce qui pèse le plus en ce moment ?”;
-if (/stress|anxie/.test(m)) return “Le stress fait partie de notre métier, mais sa gestion s’apprend. Qu’est-ce qui vous pèse le plus actuellement ?”;
-if (/peur|crainte|angoisse/.test(m)) return “La peur de mal faire est universelle chez les soignants consciencieux. De quoi avez-vous peur précisément ?”;
-if (/erreur|trompe|rate/.test(m)) return “Toute erreur analysée devient une opportunité d’apprentissage — c’est ce que Schön appelle la pratique réflexive. Que s’est-il passé ?”;
-if (/seul|solitude/.test(m)) return “Le sentiment d’isolement est l’un des facteurs de stress les plus puissants. Avez-vous des collègues vers qui vous tourner ?”;
-if (/fatigu|epuis/.test(m)) return “Cette fatigue n’est pas seulement physique. Qu’est-ce qui vous ressource habituellement ?”;
-if (/merci|super|genial/.test(m)) return “C’est avec plaisir. N’hésitez pas à revenir quand vous en aurez besoin.”;
-if (/au revoir|bye/.test(m)) return “À bientôt. Prenez soin de vous. 💙”;
-const r = [“Je vous entends. Pouvez-vous m’en dire un peu plus ?”,“Ce que vous partagez mérite réflexion. Qu’est-ce qui vous touche le plus ?”,“Qu’est-ce qui vous semble le plus difficile à porter en ce moment ?”];
+function makeReply(txt){
+const m=txt.toLowerCase();
+if(/fatigu|epuis/.test(m))return “Vos mots laissent transparaitre une fatigue profonde. La nommer est deja un acte de soin.\n\nDe quoi auriez-vous besoin maintenant ?”;
+if(/doute|nul|capable/.test(m))return “Le doute est paradoxalement un signe de conscience professionnelle elevee.\n\nIdentifiez une force que vous avez demontree aujourd’hui.”;
+if(/peur|erreur/.test(m))return “La peur de mal faire est universelle chez les soignants consciencieux. De quoi avez-vous peur precisement ?”;
+if(/depasse|stress/.test(m))return “Je vous entends. Qu’est-ce qui pese le plus en ce moment ?”;
+if(/fier|reussi/.test(m))return “Cette satisfaction merite d’etre pleinement accueillie. Ces moments construisent votre efficacite.\n\nComment capitaliser sur ce succes ?”;
+const r=[“Je vous entends. Pouvez-vous m’en dire plus ?”,“Qu’est-ce qui vous semble le plus difficile ?”,“Ce que vous partagez merite reflexion.”];
 return r[Math.floor(Math.random()*r.length)];
 }
 
-function TypeIn({text}) {
-const [d,setD]=useState(””); const [done,setDone]=useState(false);
-useEffect(()=>{
-setD(””); setDone(false); let i=0;
-const id=setInterval(()=>{if(i<text.length){setD(text.slice(0,i+1));i++;}else{setDone(true);clearInterval(id);}},13);
-return()=>clearInterval(id);
-},[text]);
-return React.createElement(React.Fragment,null,d,!done&&React.createElement(“span”,{style:{animation:“blink 0.8s infinite”,color:C.blue}},”|”));
-}
-
-function BreathOrb({onDone}) {
-const [pi,setPi]=useState(0); const [cnt,setCnt]=useState(4);
-const [cyc,setCyc]=useState(0); const cr=useRef(0);
-const PH=[{label:“Inspirez”,dur:4,col:C.blue,sc:1.4},{label:“Retenez”,dur:4,col:C.purple,sc:1.4},{label:“Expirez”,dur:6,col:C.green,sc:1}];
-useEffect(()=>{
-let pIdx=0,c=PH[0].dur; setPi(0); setCnt(c);
-const id=setInterval(()=>{
-c–;
-if(c<=0){pIdx++;if(pIdx>=PH.length){pIdx=0;cr.current++;setCyc(cr.current);if(cr.current>=3){clearInterval(id);onDone();return;}}c=PH[pIdx].dur;setPi(pIdx);}
-setCnt(c);
-},1000);
-return()=>clearInterval(id);
-},[]);
-const p=PH[pi];
-return (
-<div style={{display:“flex”,flexDirection:“column”,alignItems:“center”,gap:24,padding:“20px 0”}}>
-<div style={{display:“flex”,gap:6}}>{[0,1,2].map(i=><div key={i} style={{width:28,height:4,borderRadius:4,background:i<cyc?C.green:i===cyc?p.col:C.textD,transition:“all 0.4s”}}/>)}</div>
-<div style={{position:“relative”,width:220,height:220}}>
-<div style={{position:“absolute”,inset:-20,borderRadius:“50%”,background:`radial-gradient(circle,${p.col}20 0%,transparent 60%)`,filter:“blur(20px)”,transform:`scale(${p.sc})`,transition:`transform ${p.dur}s ease-in-out`}}/>
-<div style={{position:“absolute”,inset:0,borderRadius:“50%”,border:`2px solid ${p.col}80`,transform:`scale(${p.sc})`,transition:`transform ${p.dur}s ease-in-out`}}/>
-<div style={{position:“absolute”,inset:28,borderRadius:“50%”,border:`1.5px solid ${p.col}`,transform:`scale(${p.sc})`,transition:`transform ${p.dur}s ease-in-out`,display:“flex”,flexDirection:“column”,alignItems:“center”,justifyContent:“center”}}>
-<span style={{fontSize:52,fontWeight:200,color:p.col}}>{cnt}</span>
-<span style={{fontSize:11,color:p.col,fontWeight:600,letterSpacing:3,textTransform:“uppercase”}}>{p.label}</span>
-</div>
-</div>
-<p style={{fontSize:12,color:C.textC,textAlign:“center”,lineHeight:1.6}}>Méthode 4-4-6 · Cohérence cardiaque</p>
-</div>
-);
-}
-
-function Ring({score}) {
-const col=score<40?C.green:score<70?C.orange:C.red;
-const lbl=score<40?“Stress maîtrisé”:score<70?“Stress modéré”:“Stress élevé”;
-const [a,setA]=useState(0);
-useEffect(()=>{const id=setTimeout(()=>setA(score),150);return()=>clearTimeout(id);},[score]);
-const circ=2*Math.PI*75;
-return (
-<div style={{display:“flex”,flexDirection:“column”,alignItems:“center”,gap:14}}>
-<div style={{position:“relative”,width:190,height:190}}>
-<svg width=“190” height=“190” style={{transform:“rotate(-90deg)”}}>
-<circle cx="95" cy="95" r="75" fill="none" stroke="rgba(56,189,248,0.1)" strokeWidth="10"/>
-<circle cx=“95” cy=“95” r=“75” fill=“none” stroke={col} strokeWidth=“10”
-strokeDasharray={circ} strokeDashoffset={circ-(a/100)*circ}
-strokeLinecap=“round” style={{transition:“stroke-dashoffset 1.8s ease”}}/>
-</svg>
-<div style={{position:“absolute”,inset:0,display:“flex”,flexDirection:“column”,alignItems:“center”,justifyContent:“center”}}>
-<span style={{fontSize:52,fontWeight:200,color:col}}>{Math.round(a)}</span>
-<span style={{fontSize:11,color:C.textC,letterSpacing:2,textTransform:“uppercase”}}>sur 100</span>
-</div>
-</div>
-<div style={{background:`${col}18`,border:`1px solid ${col}30`,borderRadius:100,padding:“7px 20px”}}>
-<span style={{fontSize:14,fontWeight:600,color:col}}>{lbl}</span>
-</div>
-</div>
-);
-}
-
-function Dots({color}) {
-return <div style={{display:“flex”,gap:4}}>{[0,0.2,0.4].map(d=><div key={d} style={{width:7,height:7,borderRadius:“50%”,background:color,animation:“pulse 1.2s infinite”,animationDelay:`${d}s`}}/>)}</div>;
-}
-
-function Toggle({on,onChange}) {
-return (
-<button onClick={()=>onChange(!on)} style={{width:40,height:22,borderRadius:100,background:on?C.purple:C.textD,border:“none”,cursor:“pointer”,position:“relative”,transition:“background 0.3s”,flexShrink:0}}>
-<div style={{position:“absolute”,top:3,left:on?20:3,width:16,height:16,borderRadius:“50%”,background:”#fff”,transition:“left 0.3s”}}/>
-</button>
-);
-}
-
-function App() {
-const [screen,setScreen]=useState(“login”);
-const [anim,setAnim]=useState(true);
-const [name,setName]=useState(””); const [role,setRole]=useState(“IDE”);
-const [nameIn,setNameIn]=useState(””); const [roleIn,setRoleIn]=useState(“IDE”);
-const [qi,setQi]=useState(0); const [ans,setAns]=useState({});
-const [slid,setSlid]=useState(5); const [score,setScore]=useState(null);
-const [aiTxt,setAiTxt]=useState(””); const [aiLoading,setAiLoading]=useState(false);
-const [hist,setHist]=useState([
-{date:“28 Avr”,sit:“Arrêt cardiaque”,score:58,col:C.orange},
-{date:“21 Avr”,sit:“Détresse respiratoire”,score:44,col:C.orange},
-{date:“14 Avr”,sit:“Infarctus”,score:29,col:C.green},
-]);
-const [breathDone,setBreathDone]=useState(false);
-const [jMsgs,setJMsgs]=useState([]); const [jIn,setJIn]=useState(””); const [jLoad,setJLoad]=useState(false);
-const jEnd=useRef(null);
-const [cMsgs,setCMsgs]=useState([{r:“ai”,t:“Bonjour ! Je suis votre assistant. Comment vous sentez-vous aujourd’hui ?”}]);
-const [cIn,setCIn]=useState(””); const [cLoad,setCLoad]=useState(false);
-const cEnd=useRef(null);
-const [gTab,setGTab]=useState(“dash”);
-const [gSessions,setGSessions]=useState([]);
-const [gMsgs,setGMsgs]=useState([
-{id:1,auth:“IDE #4”,txt:“Journée difficile, merci à tous 🙏”,time:“18:42”,req:false},
-{id:2,auth:“IDE #2”,txt:“On est là ! Courage 💙”,time:“18:45”,req:false},
-]);
-const [gIn,setGIn]=useState(””); const [anon,setAnon]=useState(true); const [debReq,setDebReq]=useState(false);
-const gEnd=useRef(null);
-const [time,setTime]=useState(“9:41”);
-
-useEffect(()=>{
-const upd=()=>{const d=new Date();setTime(`${d.getHours()}:${String(d.getMinutes()).padStart(2,"0")}`);};
-upd(); const id=setInterval(upd,30000); return()=>clearInterval(id);
-},[]);
-
-useEffect(()=>{cEnd.current?.scrollIntoView({behavior:“smooth”});},[cMsgs,cLoad]);
-useEffect(()=>{jEnd.current?.scrollIntoView({behavior:“smooth”});},[jMsgs,jLoad]);
-useEffect(()=>{gEnd.current?.scrollIntoView({behavior:“smooth”});},[gMsgs]);
-
-const go=(s)=>{setAnim(false);setTimeout(()=>{setScreen(s);setAnim(true);},200);};
-const sc2col=(s)=>s<40?C.green:s<70?C.orange:C.red;
-const today=()=>{const d=new Date();return `${d.getDate()} ${["Jan","Fév","Mar","Avr","Mai","Jun","Jul","Aoû","Sep","Oct","Nov","Déc"][d.getMonth()]}`;};
-const delay=(fn,ms)=>new Promise(r=>setTimeout(()=>r(fn()),ms+Math.random()*600));
-
-const compScore=(a)=>{
+function compScore(){
 let s=0;
-if(a[1])s+=a[1]*5;
-if(a[2]!==undefined)s+=[0,5,10,15][a[2]];
-if(a[3]!==undefined)s+=[0,5,10,15][a[3]];
-if(a[4])s+=Math.min(a[4].length*3,15);
-if(a[5]!==undefined)s+=[5,4,2,1,0][a[5]];
+if(S.ans[1])s+=S.ans[1]*5;
+if(S.ans[2]!=null)s+=[0,5,10,15][S.ans[2]];
+if(S.ans[3]!=null)s+=[0,5,10,15][S.ans[3]];
+if(S.ans[4])s+=Math.min(S.ans[4].length*3,15);
+if(S.ans[5]!=null)s+=[5,4,2,1,0][S.ans[5]];
 return Math.min(Math.round(s),100);
-};
-
-const doAnswer=(val)=>{
-const na={…ans,[QS[qi].id]:val};
-setAns(na);
-if(qi<QS.length-1){setAnim(false);setTimeout(()=>{setQi(qi+1);setSlid(5);setAnim(true);},200);}
-else{
-const sc=compScore(na);
-setScore(sc);
-setHist(prev=>[{date:today(),sit:“Urgence vitale”,score:sc,col:sc2col(sc)},…prev].slice(0,5));
-go(“score”);
-setAiLoading(true);
-delay(()=>makeAnalysis(na,sc),2000).then(t=>{setAiTxt(t);setAiLoading(false);});
-}
-};
-
-const doJournal=async()=>{
-if(!jIn.trim()||jLoad)return;
-const msg={r:“user”,t:jIn}; const newM=[…jMsgs,msg]; setJMsgs(newM);
-const inp=jIn; setJIn(””); setJLoad(true);
-const rep=await delay(()=>jMsgs.length===0?makeJournalReply(inp):makeChatReply(inp),1600);
-setJMsgs([…newM,{r:“ai”,t:rep}]); setJLoad(false);
-};
-
-const doChat=async()=>{
-if(!cIn.trim()||cLoad)return;
-const msg={r:“user”,t:cIn}; const newM=[…cMsgs,msg]; setCMsgs(newM);
-const inp=cIn; setCIn(””); setCLoad(true);
-const rep=await delay(()=>makeChatReply(inp),1200);
-setCMsgs([…newM,{r:“ai”,t:rep}]); setCLoad(false);
-};
-
-const sendGroup=async()=>{
-if(!gIn.trim())return;
-const msg={id:Date.now(),auth:anon?`IDE #${Math.floor(Math.random()*9)+1}`:name,txt:gIn,time,req:false};
-setGMsgs([…gMsgs,msg]); setGIn(””);
-};
-
-const requestDebrief=async()=>{
-const msg={id:Date.now(),auth:anon?“Un IDE du service”:name,txt:“Demande de débriefing collectif — Des situations difficiles ont été signalées. Un moment d’équipe serait bénéfique.”,time,req:true};
-setGMsgs([…gMsgs,msg]); setDebReq(true);
-};
-
-const gAvg=gSessions.length?Math.round(gSessions.reduce((s,h)=>s+h.score,0)/gSessions.length):null;
-const gHigh=gSessions.filter(s=>s.score>=70).length;
-const q=QS[qi];
-
-const card={background:C.card,border:`1px solid ${C.border}`,borderRadius:20,padding:18,backdropFilter:“blur(20px)”};
-const btnP={background:`linear-gradient(135deg,${C.blue},${C.blueD})`,color:”#fff”,border:“none”,borderRadius:14,padding:“14px 22px”,fontSize:15,fontWeight:700,cursor:“pointer”,width:“100%”,boxShadow:`0 4px 20px ${C.blue}33`};
-const btnS={background:“rgba(56,189,248,0.08)”,color:C.textB,border:`1px solid ${C.border}`,borderRadius:14,padding:“12px 18px”,fontSize:13,fontWeight:600,cursor:“pointer”,width:“100%”};
-
-return (
-<div style={{minHeight:“100dvh”,background:“linear-gradient(180deg,#050B17 0%,#020617 100%)”,fontFamily:”-apple-system,system-ui,sans-serif”,color:C.text,overflowX:“hidden”}}>
-
-```
-  {screen!=="login"&&(
-    <div style={{position:"sticky",top:0,zIndex:50,background:"rgba(2,6,23,0.9)",backdropFilter:"blur(20px)",borderBottom:`1px solid ${C.border}`,padding:"12px 20px"}}>
-      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",maxWidth:480,margin:"0 auto"}}>
-        <div style={{display:"flex",alignItems:"center",gap:10}}>
-          <div style={{width:36,height:36,borderRadius:11,background:`linear-gradient(135deg,${C.blue},${C.purple})`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,animation:"glow 3s infinite"}}>💙</div>
-          <div>
-            <div style={{display:"flex",alignItems:"center",gap:6}}>
-              <span style={{fontSize:17,fontWeight:700,letterSpacing:-0.5}}>StressoCare</span>
-              <span style={{fontSize:9,color:C.purple,background:"rgba(167,139,250,0.2)",padding:"2px 7px",borderRadius:20,fontWeight:700}}>IA</span>
-            </div>
-            <span style={{fontSize:10,color:C.textC}}>{name} · {role}</span>
-          </div>
-        </div>
-        {screen!=="home"&&<button onClick={()=>go("home")} style={{background:"rgba(56,189,248,0.1)",border:`1px solid ${C.border}`,color:C.blue,fontSize:11,fontWeight:600,padding:"7px 14px",borderRadius:100,cursor:"pointer"}}>← Accueil</button>}
-      </div>
-    </div>
-  )}
-
-  <div style={{maxWidth:480,margin:"0 auto",padding:"0 18px 100px",opacity:anim?1:0,transform:anim?"translateY(0)":"translateY(8px)",transition:"opacity 0.2s,transform 0.2s"}}>
-
-    {screen==="login"&&(
-      <div style={{display:"flex",flexDirection:"column",gap:20,padding:"40px 0"}}>
-        <div style={{textAlign:"center",padding:"20px 0"}}>
-          <div style={{fontSize:64,marginBottom:16,animation:"float 3s infinite"}}>💙</div>
-          <h1 style={{fontSize:28,fontWeight:800,letterSpacing:-1,marginBottom:8}}>StressoCare</h1>
-          <p style={{fontSize:14,color:C.textB,lineHeight:1.6}}>Votre assistant de soutien émotionnel post-urgence</p>
-        </div>
-        <div style={card}>
-          <p style={{fontSize:11,color:C.textC,fontWeight:600,textTransform:"uppercase",letterSpacing:1.5,marginBottom:10}}>Votre prénom</p>
-          <input value={nameIn} onChange={e=>setNameIn(e.target.value)} placeholder="Hugo"
-            style={{width:"100%",background:"rgba(56,189,248,0.06)",border:`1px solid ${C.border}`,borderRadius:12,padding:"13px 16px",color:C.text,fontSize:15,outline:"none",fontFamily:"inherit",marginBottom:18,boxSizing:"border-box"}}/>
-          <p style={{fontSize:11,color:C.textC,fontWeight:600,textTransform:"uppercase",letterSpacing:1.5,marginBottom:10}}>Votre rôle</p>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,marginBottom:22}}>
-            {["IDE","Cadre","AS"].map(r=>(
-              <button key={r} onClick={()=>setRoleIn(r)} style={{padding:"12px 4px",fontSize:13,fontWeight:600,borderRadius:12,border:`1.5px solid ${roleIn===r?C.blue:C.border}`,background:roleIn===r?"rgba(56,189,248,0.15)":"transparent",color:roleIn===r?C.blue:C.textC,cursor:"pointer"}}>{r}</button>
-            ))}
-          </div>
-          <button onClick={()=>{if(nameIn.trim()){setName(nameIn.trim());setRole(roleIn);go("home");}}} disabled={!nameIn.trim()} style={{...btnP,opacity:nameIn.trim()?1:0.5}}>
-            Commencer →
-          </button>
-        </div>
-        <p style={{fontSize:10,color:C.textD,textAlign:"center",lineHeight:1.6}}>Données locales et anonymisées · Créé dans le cadre d'un TIR infirmier</p>
-      </div>
-    )}
-
-    {screen==="home"&&(
-      <div style={{display:"flex",flexDirection:"column",gap:14,paddingTop:20}}>
-        <div style={{...card,background:"linear-gradient(135deg,rgba(56,189,248,0.07),rgba(167,139,250,0.07))",padding:22}}>
-          <p style={{fontSize:11,color:C.blue,fontWeight:700,textTransform:"uppercase",letterSpacing:2,marginBottom:8}}>Bonjour {name}</p>
-          <h2 style={{fontSize:22,fontWeight:700,lineHeight:1.25,marginBottom:8,letterSpacing:-0.5}}>Comment se passe votre journée ?</h2>
-          <p style={{fontSize:13,color:C.textB,lineHeight:1.6}}>Votre assistant IA est là pour vous accompagner après chaque urgence.</p>
-        </div>
-        <button onClick={()=>{setQi(0);setAns({});setAiTxt("");setScore(null);go("debrief");}} style={{...card,padding:18,cursor:"pointer",textAlign:"left",background:"linear-gradient(135deg,rgba(56,189,248,0.12),rgba(56,189,248,0.03))",border:`1px solid ${C.borderHi}`,display:"flex",alignItems:"center",gap:14}}>
-          <div style={{width:50,height:50,borderRadius:15,background:`linear-gradient(135deg,${C.blue},${C.blueD})`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,flexShrink:0}}>📋</div>
-          <div style={{flex:1}}><p style={{fontSize:15,fontWeight:700,marginBottom:3}}>Débriefing IA</p><p style={{fontSize:12,color:C.textB}}>5 questions · Analyse personnalisée</p></div>
-          <span style={{color:C.blue,fontSize:20}}>→</span>
-        </button>
-        <button onClick={()=>go("group")} style={{...card,padding:16,cursor:"pointer",textAlign:"left",background:"linear-gradient(135deg,rgba(167,139,250,0.1),rgba(52,211,153,0.05))",border:"1px solid rgba(167,139,250,0.3)",display:"flex",alignItems:"center",gap:12}}>
-          <div style={{width:46,height:46,borderRadius:14,background:`linear-gradient(135deg,${C.purple},${C.pink})`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,flexShrink:0}}>👥</div>
-          <div style={{flex:1}}><p style={{fontSize:14,fontWeight:700,marginBottom:2}}>Espace équipe</p><p style={{fontSize:12,color:C.textB}}>{gSessions.length>0?`${gSessions.length} sessions · Score moy. ${gAvg}/100`:"Tableau de bord · Soutien · Débriefing"}</p></div>
-          {gHigh>0&&<div style={{background:"rgba(248,113,113,0.2)",border:"1px solid rgba(248,113,113,0.4)",borderRadius:100,padding:"4px 10px"}}><span style={{fontSize:11,color:C.red,fontWeight:700}}>{gHigh} ⚠️</span></div>}
-          <span style={{color:C.purple,fontSize:20}}>→</span>
-        </button>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
-          {[
-            {icon:"🌬",lbl:"Respiration",desc:"3 min · 4-4-6",act:()=>{setBreathDone(false);go("breath");},col:C.green},
-            {icon:"💬",lbl:"Coach IA",desc:"Conversation",act:()=>go("chat"),col:C.purple},
-            {icon:"📓",lbl:"Journal",desc:"IA réflexive",act:()=>{setJMsgs([]);setJIn("");go("journal");},col:C.pink},
-            {icon:"📊",lbl:"Historique",desc:"Mon évolution",act:()=>go("history"),col:C.orange},
-          ].map((it,i)=>(
-            <button key={i} onClick={it.act} style={{...card,padding:16,cursor:"pointer",textAlign:"left"}}>
-              <div style={{width:40,height:40,borderRadius:12,background:`${it.col}22`,border:`1px solid ${it.col}40`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,marginBottom:10}}>{it.icon}</div>
-              <p style={{fontSize:14,fontWeight:700,marginBottom:2}}>{it.lbl}</p>
-              <p style={{fontSize:11,color:C.textC}}>{it.desc}</p>
-            </button>
-          ))}
-        </div>
-        {hist.length>0&&(
-          <div style={{...card,padding:14,display:"flex",alignItems:"center",gap:12,background:`linear-gradient(135deg,${sc2col(hist[0].score)}10,transparent)`,border:`1px solid ${sc2col(hist[0].score)}30`}}>
-            <span style={{fontSize:24}}>{hist[0].score<40?"✅":hist[0].score<70?"⚠️":"🔴"}</span>
-            <div><p style={{fontSize:13,fontWeight:600,color:sc2col(hist[0].score)}}>Dernière session — {hist[0].date}</p><p style={{fontSize:11,color:C.textC}}>{hist[0].sit} · Score {hist[0].score}/100</p></div>
-          </div>
-        )}
-      </div>
-    )}
-
-    {screen==="debrief"&&(
-      <div style={{display:"flex",flexDirection:"column",gap:18,paddingTop:20}}>
-        <div style={{display:"flex",gap:4}}>{QS.map((_,i)=><div key={i} style={{flex:1,height:4,borderRadius:4,background:i<=qi?`linear-gradient(90deg,${C.blue},${C.purple})`:C.textD,transition:"background 0.4s"}}/>)}</div>
-        <p style={{fontSize:12,color:C.textC,fontWeight:600}}>{qi+1} sur {QS.length}</p>
-        <div style={card}>
-          <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:18}}>
-            <span style={{fontSize:24}}>{q.icon}</span>
-            <p style={{fontSize:17,fontWeight:700,lineHeight:1.4,flex:1}}>{q.text}</p>
-          </div>
-          {q.type==="scale"&&(
-            <div style={{display:"flex",flexDirection:"column",gap:18}}>
-              <div style={{textAlign:"center",padding:"8px 0"}}><span style={{fontSize:64,fontWeight:200,color:C.blue,letterSpacing:-3}}>{slid}</span><span style={{fontSize:16,color:C.textC,marginLeft:6}}>/10</span></div>
-              <input type="range" min="1" max="10" value={slid} onChange={e=>setSlid(Number(e.target.value))} style={{width:"100%",accentColor:C.blue,height:6}}/>
-              <div style={{display:"flex",justifyContent:"space-between"}}><span style={{fontSize:11,color:C.textC}}>{q.min}</span><span style={{fontSize:11,color:C.textC}}>{q.max}</span></div>
-              <button style={btnP} onClick={()=>doAnswer(slid)}>Continuer →</button>
-            </div>
-          )}
-          {q.type==="choice"&&<div style={{display:"flex",flexDirection:"column",gap:10}}>{q.opts.map((o,i)=><button key={i} onClick={()=>doAnswer(i)} style={{background:"rgba(56,189,248,0.05)",border:`1px solid ${C.border}`,borderRadius:13,padding:"14px 16px",textAlign:"left",color:C.text,fontSize:14,cursor:"pointer"}}>{o}</button>)}</div>}
-          {q.type==="multi"&&(
-            <div style={{display:"flex",flexDirection:"column",gap:10}}>
-              {q.opts.map((o,i)=>{const sel=ans[q.id]?.includes(i);return<button key={i} onClick={()=>{const p=ans[q.id]||[];setAns({...ans,[q.id]:sel?p.filter(x=>x!==i):[...p,i]});}} style={{background:sel?"rgba(56,189,248,0.18)":"rgba(56,189,248,0.05)",border:`1.5px solid ${sel?C.blue:C.border}`,borderRadius:13,padding:"12px 16px",textAlign:"left",color:sel?C.blue:C.text,fontSize:14,cursor:"pointer",display:"flex",alignItems:"center",gap:10}}><div style={{width:18,height:18,borderRadius:6,border:`1.5px solid ${sel?C.blue:C.textD}`,background:sel?C.blue:"transparent",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{sel&&<span style={{color:"#000",fontSize:11,fontWeight:900}}>✓</span>}</div>{o}</button>;})}
-              <button style={{...btnP,marginTop:6}} onClick={()=>doAnswer(ans[q.id]||[])}>Continuer →</button>
-            </div>
-          )}
-          {q.type==="emoji"&&<div style={{display:"flex",justifyContent:"space-around",padding:"16px 0"}}>{q.opts.map((em,i)=><button key={i} onClick={()=>doAnswer(i)} style={{background:"none",border:"none",fontSize:42,cursor:"pointer",padding:8}}>{em}</button>)}</div>}
-        </div>
-      </div>
-    )}
-
-    {screen==="score"&&score!==null&&(
-      <div style={{display:"flex",flexDirection:"column",gap:16,paddingTop:20}}>
-        <div style={card}><p style={{fontSize:11,color:C.blue,fontWeight:700,textTransform:"uppercase",letterSpacing:2,marginBottom:18,textAlign:"center"}}>Votre score</p><Ring score={score}/></div>
-        <div style={{...card,background:"linear-gradient(135deg,rgba(167,139,250,0.1),rgba(56,189,248,0.05))",border:"1px solid rgba(167,139,250,0.3)"}}>
-          <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:14}}>
-            <div style={{width:34,height:34,borderRadius:10,background:`linear-gradient(135deg,${C.purple},${C.blue})`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16}}>✨</div>
-            <div><p style={{fontSize:14,fontWeight:700}}>Analyse IA</p><p style={{fontSize:11,color:C.purple}}>Personnalisée pour vous</p></div>
-          </div>
-          {aiLoading?(
-            <div style={{display:"flex",flexDirection:"column",gap:10}}>
-              <div style={{display:"flex",alignItems:"center",gap:8}}><div style={{width:14,height:14,border:`2px solid ${C.purple}`,borderTopColor:"transparent",borderRadius:"50%",animation:"spin 0.8s linear infinite"}}/><span style={{fontSize:12,color:C.textC}}>Analyse en cours...</span></div>
-              {[90,75,85,60].map((w,i)=><div key={i} style={{height:9,borderRadius:5,background:"rgba(167,139,250,0.15)",width:`${w}%`,animation:"pulse 1.5s infinite",animationDelay:`${i*0.15}s`}}/>)}
-            </div>
-          ):aiTxt?<p style={{fontSize:13,color:C.textB,lineHeight:1.75,whiteSpace:"pre-wrap"}}><TypeIn text={aiTxt}/></p>:null}
-        </div>
-        <div style={{...card,background:"linear-gradient(135deg,rgba(167,139,250,0.08),transparent)",border:"1px solid rgba(167,139,250,0.25)"}}>
-          <p style={{fontSize:13,fontWeight:700,marginBottom:8}}>Partager avec l'équipe</p>
-          <p style={{fontSize:12,color:C.textB,lineHeight:1.5,marginBottom:12}}>Contribuez aux statistiques de votre service.</p>
-          <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:14}}><Toggle on={anon} onChange={setAnon}/><span style={{fontSize:12,color:C.textB}}>Anonyme {anon?"(actif)":"(désactivé)"}</span></div>
-          <div style={{display:"flex",gap:10}}>
-            <button onClick={()=>{const e={id:Date.now(),date:today(),score,col:sc2col(score),auth:anon?`IDE #${Math.floor(Math.random()*9)+1}`:name};setGSessions(prev=>[e,...prev].slice(0,20));go("home");}} style={{...btnP,flex:1,padding:"11px 0",fontSize:13}}>Partager</button>
-            <button onClick={()=>go("home")} style={{...btnS,flex:1,padding:"11px 0",fontSize:13}}>Passer</button>
-          </div>
-        </div>
-        <button style={btnP} onClick={()=>{setBreathDone(false);go("breath");}}>🌬 Exercice de respiration</button>
-        <button style={btnS} onClick={()=>go("home")}>Retour à l'accueil</button>
-      </div>
-    )}
-
-    {screen==="breath"&&(
-      <div style={{display:"flex",flexDirection:"column",gap:16,paddingTop:20}}>
-        <div style={card}><p style={{fontSize:11,color:C.green,fontWeight:700,textTransform:"uppercase",letterSpacing:2,marginBottom:6}}>Cohérence cardiaque</p><p style={{fontSize:15,fontWeight:700,marginBottom:4}}>Respirez avec le cercle</p><p style={{fontSize:12,color:C.textB,lineHeight:1.6}}>3 cycles · Méthode 4-4-6 · 42 secondes</p></div>
-        <div style={card}>{!breathDone?<BreathOrb onDone={()=>setBreathDone(true)}/>:(
-          <div style={{textAlign:"center",padding:"36px 0"}}>
-            <div style={{fontSize:60,marginBottom:14,animation:"float 2s infinite"}}>✨</div>
-            <p style={{fontSize:18,fontWeight:700,color:C.green,marginBottom:10}}>Bien joué</p>
-            <p style={{fontSize:13,color:C.textB,lineHeight:1.7,marginBottom:24}}>Votre rythme cardiaque devrait se stabiliser. Prenez un moment pour ressentir ce calme.</p>
-            <button style={btnP} onClick={()=>go("home")}>Retour à l'accueil</button>
-          </div>
-        )}</div>
-      </div>
-    )}
-
-    {screen==="journal"&&(
-      <div style={{display:"flex",flexDirection:"column",gap:14,paddingTop:20}}>
-        <div style={{...card,background:"linear-gradient(135deg,rgba(244,114,182,0.1),transparent)",border:"1px solid rgba(244,114,182,0.3)",padding:16}}>
-          <div style={{display:"flex",alignItems:"center",gap:10}}>
-            <div style={{width:38,height:38,borderRadius:12,background:`linear-gradient(135deg,${C.pink},${C.purple})`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18}}>📓</div>
-            <div><p style={{fontSize:14,fontWeight:700}}>Journal réflexif</p><p style={{fontSize:11,color:C.pink}}>Confidentiel · Pratique réflexive</p></div>
-          </div>
-        </div>
-        <div style={{...card,padding:14,minHeight:260}}>
-          {jMsgs.length===0&&<p style={{fontSize:13,color:C.textC,fontStyle:"italic",marginBottom:10,lineHeight:1.6}}>Écrivez librement ce que vous avez vécu. L'IA vous répondra et poursuivra la conversation.</p>}
-          <div style={{display:"flex",flexDirection:"column",gap:10}}>
-            {jMsgs.map((m,i)=>(
-              <div key={i} style={{display:"flex",justifyContent:m.r==="user"?"flex-end":"flex-start"}}>
-                <div style={{maxWidth:"86%",background:m.r==="user"?`linear-gradient(135deg,${C.pink},${C.purple})`:"rgba(244,114,182,0.1)",color:m.r==="user"?"#fff":C.textB,padding:"10px 14px",borderRadius:m.r==="user"?"16px 16px 4px 16px":"16px 16px 16px 4px",fontSize:13,lineHeight:1.65,border:m.r==="user"?"none":"1px solid rgba(244,114,182,0.2)",whiteSpace:"pre-wrap"}}>
-                  {i===jMsgs.length-1&&m.r==="ai"?<TypeIn text={m.t}/>:m.t}
-                </div>
-              </div>
-            ))}
-            {jLoad&&<div style={{display:"flex",justifyContent:"flex-start"}}><div style={{background:"rgba(244,114,182,0.1)",padding:"10px 14px",borderRadius:"16px 16px 16px 4px",border:"1px solid rgba(244,114,182,0.2)"}}><Dots color={C.pink}/></div></div>}
-            <div ref={jEnd}/>
-          </div>
-        </div>
-        <div style={{display:"flex",gap:10,alignItems:"flex-end"}}>
-          <textarea value={jIn} onChange={e=>setJIn(e.target.value)} onKeyDown={e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();doJournal();}}} placeholder={jMsgs.length===0?"Aujourd'hui, j'ai vécu...":"Répondez à l'IA..."} rows={2}
-            style={{flex:1,background:C.cardSolid,border:"1px solid rgba(244,114,182,0.35)",borderRadius:16,padding:"12px 16px",color:C.text,fontSize:14,fontFamily:"inherit",resize:"none",outline:"none",lineHeight:1.5}}/>
-          <button onClick={doJournal} disabled={!jIn.trim()||jLoad} style={{width:46,height:46,borderRadius:"50%",background:`linear-gradient(135deg,${C.pink},${C.purple})`,border:"none",color:"#fff",fontSize:20,cursor:"pointer",flexShrink:0,opacity:!jIn.trim()||jLoad?0.5:1}}>↑</button>
-        </div>
-        {jMsgs.length===0&&<div style={{display:"flex",gap:8,flexWrap:"wrap"}}>{["J'ai vécu une urgence difficile","Je me sens épuisé","Je doute de moi"].map(s=><button key={s} onClick={()=>setJIn(s)} style={{fontSize:11,color:C.pink,background:"rgba(244,114,182,0.1)",border:"1px solid rgba(244,114,182,0.3)",padding:"6px 12px",borderRadius:100,cursor:"pointer"}}>{s}</button>)}</div>}
-        {jMsgs.length>0&&<button onClick={()=>setJMsgs([])} style={{...btnS,fontSize:12}}>Nouvelle entrée</button>}
-      </div>
-    )}
-
-    {screen==="chat"&&(
-      <div style={{display:"flex",flexDirection:"column",gap:14,paddingTop:20}}>
-        <div style={{...card,background:"linear-gradient(135deg,rgba(167,139,250,0.1),transparent)",border:"1px solid rgba(167,139,250,0.3)",padding:16}}>
-          <div style={{display:"flex",alignItems:"center",gap:10}}>
-            <div style={{width:38,height:38,borderRadius:12,background:`linear-gradient(135deg,${C.purple},${C.blue})`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18}}>💬</div>
-            <div><p style={{fontSize:14,fontWeight:700}}>Coach IA</p><p style={{fontSize:11,color:C.purple}}>En ligne · Confidentiel</p></div>
-          </div>
-        </div>
-        <div style={{...card,padding:14,minHeight:300}}>
-          <div style={{display:"flex",flexDirection:"column",gap:10}}>
-            {cMsgs.map((m,i)=>(
-              <div key={i} style={{display:"flex",justifyContent:m.r==="user"?"flex-end":"flex-start"}}>
-                <div style={{maxWidth:"84%",background:m.r==="user"?`linear-gradient(135deg,${C.blue},${C.blueD})`:"rgba(167,139,250,0.12)",color:m.r==="user"?"#fff":C.textB,padding:"10px 14px",borderRadius:m.r==="user"?"16px 16px 4px 16px":"16px 16px 16px 4px",fontSize:13,lineHeight:1.6,border:m.r==="user"?"none":"1px solid rgba(167,139,250,0.2)"}}>{m.t}</div>
-              </div>
-            ))}
-            {cLoad&&<div style={{display:"flex",justifyContent:"flex-start"}}><div style={{background:"rgba(167,139,250,0.12)",padding:"10px 14px",borderRadius:"16px 16px 16px 4px",border:"1px solid rgba(167,139,250,0.2)"}}><Dots color={C.purple}/></div></div>}
-            <div ref={cEnd}/>
-          </div>
-        </div>
-        <div style={{display:"flex",gap:10,alignItems:"center"}}>
-          <input type="text" value={cIn} onChange={e=>setCIn(e.target.value)} onKeyDown={e=>e.key==="Enter"&&doChat()} placeholder="Écrivez un message..."
-            style={{flex:1,background:C.cardSolid,border:`1px solid ${C.border}`,borderRadius:100,padding:"13px 18px",color:C.text,fontSize:14,outline:"none",fontFamily:"inherit"}}/>
-          <button onClick={doChat} disabled={!cIn.trim()||cLoad} style={{width:46,height:46,borderRadius:"50%",background:`linear-gradient(135deg,${C.blue},${C.purple})`,border:"none",color:"#fff",fontSize:20,cursor:"pointer",opacity:!cIn.trim()||cLoad?0.5:1}}>↑</button>
-        </div>
-        <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
-          {["Je me sens dépassé","Comment gérer mon stress","J'ai peur de mal faire"].map(s=><button key={s} onClick={()=>setCIn(s)} style={{fontSize:11,color:C.purple,background:"rgba(167,139,250,0.1)",border:"1px solid rgba(167,139,250,0.3)",padding:"6px 12px",borderRadius:100,cursor:"pointer"}}>{s}</button>)}
-        </div>
-      </div>
-    )}
-
-    {screen==="history"&&(
-      <div style={{display:"flex",flexDirection:"column",gap:14,paddingTop:20}}>
-        <div style={card}>
-          <p style={{fontSize:11,color:C.blue,fontWeight:700,textTransform:"uppercase",letterSpacing:2,marginBottom:14}}>Évolution du stress</p>
-          <div style={{display:"flex",alignItems:"flex-end",gap:8,height:110,marginBottom:12}}>
-            {[...hist].reverse().map((h,i)=>(
-              <div key={i} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:6}}>
-                <span style={{fontSize:11,fontWeight:700,color:h.col}}>{h.score}</span>
-                <div style={{width:"100%",height:Math.max(h.score*0.9,6),background:`linear-gradient(180deg,${h.col}60,${h.col}20)`,borderRadius:"8px 8px 0 0"}}/>
-                <span style={{fontSize:9,color:C.textC}}>{h.date.split(" ")[0]}</span>
-              </div>
-            ))}
-          </div>
-          {hist.length>=2&&(()=>{const diff=hist[0].score-hist[hist.length-1].score;return<p style={{fontSize:12,color:diff>0?C.red:C.green,textAlign:"center",fontWeight:600}}>{diff>0?`📈 +${diff} pts`:`📉 ${diff} pts`} depuis le début</p>;})()}
-        </div>
-        {hist.map((h,i)=>(
-          <div key={i} style={{...card,padding:14,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-            <div><p style={{fontSize:14,fontWeight:700}}>{h.sit}</p><p style={{fontSize:11,color:C.textC}}>{h.date}</p></div>
-            <div style={{background:`${h.col}20`,border:`1px solid ${h.col}40`,padding:"6px 14px",borderRadius:100}}>
-              <span style={{fontSize:14,fontWeight:700,color:h.col}}>{h.score}</span><span style={{fontSize:11,color:h.col,opacity:0.7}}>/100</span>
-            </div>
-          </div>
-        ))}
-        <div style={{...card,background:"linear-gradient(135deg,rgba(56,189,248,0.06),rgba(167,139,250,0.06))",border:`1px solid ${C.borderHi}`}}>
-          <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:12}}><span style={{fontSize:22}}>📧</span><div><p style={{fontSize:14,fontWeight:700}}>Envoyer à ma cadre</p><p style={{fontSize:11,color:C.textC}}>Compte rendu anonymisé</p></div></div>
-          <button onClick={()=>{
-            const lines=hist.map(h=>`* ${h.date} - ${h.sit} - Score: ${h.score}/100`).join("%0A");
-            const avg=Math.round(hist.reduce((s,h)=>s+h.score,0)/hist.length);
-            window.location.href=`mailto:?subject=${encodeURIComponent("StressoCare - Compte rendu")}&body=${encodeURIComponent(`Bonjour,\n\nCompte rendu StressoCare:\nSessions: ${hist.length} | Score moyen: ${avg}/100\n\nDétail:\n`)  }${lines}${encodeURIComponent("\n\nCordialement")}`;
-          }} style={btnP}>📧 Ouvrir dans Mail</button>
-          <button onClick={()=>{
-            const txt=hist.map(h=>`${h.date} - ${h.sit} - ${h.score}/100`).join("\n");
-            const avg=Math.round(hist.reduce((s,h)=>s+h.score,0)/hist.length);
-            if(navigator.share)navigator.share({title:"StressoCare",text:`StressoCare - Compte rendu\nSessions: ${hist.length} | Moy: ${avg}/100\n\n${txt}`});
-            else{navigator.clipboard?.writeText(`${hist.length} sessions | Moy: ${avg}/100\n${txt}`);alert("Copié !");}
-          }} style={{...btnS,marginTop:10}}>↗️ Partager autrement</button>
-        </div>
-      </div>
-    )}
-
-    {screen==="group"&&(
-      <div style={{display:"flex",flexDirection:"column",gap:14,paddingTop:20}}>
-        <div style={{...card,background:"linear-gradient(135deg,rgba(167,139,250,0.1),rgba(52,211,153,0.05))",border:"1px solid rgba(167,139,250,0.3)",padding:16}}>
-          <div style={{display:"flex",alignItems:"center",gap:10}}>
-            <div style={{width:40,height:40,borderRadius:12,background:`linear-gradient(135deg,${C.purple},${C.pink})`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20}}>👥</div>
-            <div><p style={{fontSize:15,fontWeight:700}}>Espace équipe</p><p style={{fontSize:11,color:C.purple}}>Données anonymisées · Partage entre collègues</p></div>
-          </div>
-        </div>
-        <div style={{display:"flex",gap:8}}>
-          {[{id:"dash",lbl:"📊 Tableau"},{id:"msgs",lbl:"💬 Soutien"},{id:"deb",lbl:"🔔 Débriefing"}].map(t=>(
-            <button key={t.id} onClick={()=>setGTab(t.id)} style={{flex:1,padding:"10px 4px",fontSize:12,fontWeight:600,borderRadius:12,border:`1px solid ${gTab===t.id?C.purple:C.border}`,background:gTab===t.id?"rgba(167,139,250,0.2)":"transparent",color:gTab===t.id?C.purple:C.textC,cursor:"pointer"}}>{t.lbl}</button>
-          ))}
-        </div>
-        {gTab==="dash"&&(
-          <div style={{display:"flex",flexDirection:"column",gap:12}}>
-            {gSessions.length===0?(
-              <div style={{...card,textAlign:"center",padding:36}}>
-                <p style={{fontSize:36,marginBottom:14}}>📊</p>
-                <p style={{fontSize:15,fontWeight:700,marginBottom:8}}>Aucune donnée partagée</p>
-                <p style={{fontSize:13,color:C.textC,lineHeight:1.6}}>Après un débriefing, partagez votre score pour alimenter ce tableau.</p>
-              </div>
-            ):(
-              <>
-                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10}}>
-                  {[{lbl:"Sessions",val:gSessions.length,col:C.blue},{lbl:"Score moy.",val:`${gAvg}/100`,col:sc2col(gAvg)},{lbl:"Stress élevé",val:gHigh,col:gHigh>0?C.red:C.green}].map((s,i)=>(
-                    <div key={i} style={{...card,padding:14,textAlign:"center"}}><p style={{fontSize:22,fontWeight:700,color:s.col,marginBottom:4}}>{s.val}</p><p style={{fontSize:10,color:C.textC,textTransform:"uppercase",letterSpacing:0.5}}>{s.lbl}</p></div>
-                  ))}
-                </div>
-                {gHigh>0&&<div style={{background:"rgba(248,113,113,0.1)",border:"1px solid rgba(248,113,113,0.3)",borderRadius:14,padding:"12px 16px"}}><p style={{fontSize:13,color:C.red,fontWeight:600}}>{gHigh} session(s) à stress élevé</p><p style={{fontSize:12,color:C.textB,marginTop:4}}>Un débriefing collectif serait recommandé.</p></div>}
-                <button onClick={()=>setGSessions([])} style={{...btnS,fontSize:12}}>Réinitialiser</button>
-              </>
-            )}
-          </div>
-        )}
-        {gTab==="msgs"&&(
-          <div style={{display:"flex",flexDirection:"column",gap:12}}>
-            <div style={{...card,padding:14,minHeight:240}}>
-              <div style={{display:"flex",flexDirection:"column",gap:10}}>
-                {gMsgs.filter(m=>!m.req).map((m,i)=>(
-                  <div key={i}><p style={{fontSize:10,color:C.textD,marginBottom:4,paddingLeft:4}}>{m.auth} · {m.time}</p><div style={{background:"rgba(167,139,250,0.1)",color:C.textB,padding:"10px 14px",borderRadius:"16px 16px 16px 4px",fontSize:13,lineHeight:1.55,border:"1px solid rgba(167,139,250,0.2)",maxWidth:"86%"}}>{m.txt}</div></div>
-                ))}
-                <div ref={gEnd}/>
-              </div>
-            </div>
-            <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>{SUPPORT.slice(0,3).map(s=><button key={s} onClick={()=>setGIn(s)} style={{fontSize:11,color:C.purple,background:"rgba(167,139,250,0.1)",border:"1px solid rgba(167,139,250,0.3)",padding:"6px 12px",borderRadius:100,cursor:"pointer"}}>{s}</button>)}</div>
-            <div style={{display:"flex",alignItems:"center",gap:10}}><Toggle on={anon} onChange={setAnon}/><span style={{fontSize:12,color:C.textB}}>Anonyme {anon?"(actif)":"(désactivé)"}</span></div>
-            <div style={{display:"flex",gap:10,alignItems:"center"}}>
-              <input type="text" value={gIn} onChange={e=>setGIn(e.target.value)} onKeyDown={e=>e.key==="Enter"&&sendGroup()} placeholder="Message à l'équipe..." style={{flex:1,background:C.cardSolid,border:"1px solid rgba(167,139,250,0.35)",borderRadius:100,padding:"13px 18px",color:C.text,fontSize:14,outline:"none",fontFamily:"inherit"}}/>
-              <button onClick={sendGroup} disabled={!gIn.trim()} style={{width:46,height:46,borderRadius:"50%",background:`linear-gradient(135deg,${C.purple},${C.pink})`,border:"none",color:"#fff",fontSize:20,cursor:"pointer",opacity:!gIn.trim()?0.5:1}}>↑</button>
-            </div>
-          </div>
-        )}
-        {gTab==="deb"&&(
-          <div style={{display:"flex",flexDirection:"column",gap:12}}>
-            <div style={{...card,background:"linear-gradient(135deg,rgba(251,146,60,0.1),transparent)",border:"1px solid rgba(251,146,60,0.3)"}}>
-              <p style={{fontSize:14,fontWeight:700,marginBottom:8}}>Demander un débriefing collectif</p>
-              <p style={{fontSize:13,color:C.textB,lineHeight:1.65,marginBottom:14}}>Signalez à votre cadre qu'un moment collectif serait bénéfique.</p>
-              <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:16}}><Toggle on={anon} onChange={setAnon}/><span style={{fontSize:12,color:C.textB}}>Anonyme {anon?"(actif)":"(désactivé)"}</span></div>
-              {!debReq?(
-                <button onClick={requestDebrief} style={{...btnP,background:`linear-gradient(135deg,${C.orange},#EA580C)`}}>Envoyer la demande</button>
-              ):(
-                <div style={{background:"rgba(52,211,153,0.1)",border:"1px solid rgba(52,211,153,0.3)",borderRadius:12,padding:"14px 18px",textAlign:"center"}}>
-                  <p style={{fontSize:14,fontWeight:700,color:C.green}}>Demande envoyée ✅</p>
-                  <p style={{fontSize:12,color:C.textB,marginTop:6}}>Votre cadre a été notifié dans l'espace messages.</p>
-                </div>
-              )}
-            </div>
-            <div style={{...card,background:"linear-gradient(135deg,rgba(56,189,248,0.06),transparent)",border:`1px solid ${C.border}`}}>
-              <p style={{fontSize:13,fontWeight:700,color:C.blue,marginBottom:8}}>Pourquoi un débriefing collectif ?</p>
-              <p style={{fontSize:12,color:C.textB,lineHeight:1.75}}>Selon Edmondson, la sécurité psychologique d'équipe se construit dans ces espaces de parole partagée. Un débriefing après une urgence difficile réduit le stress résiduel et renforce la cohésion.</p>
-            </div>
-          </div>
-        )}
-      </div>
-    )}
-
-  </div>
-
-  {screen!=="login"&&(
-    <div style={{position:"fixed",bottom:0,left:0,right:0,background:"rgba(2,6,23,0.95)",backdropFilter:"blur(20px)",borderTop:`1px solid ${C.border}`,paddingBottom:"env(safe-area-inset-bottom)"}}>
-      <div style={{display:"flex",maxWidth:480,margin:"0 auto"}}>
-        {[
-          {icon:"🏠",lbl:"Accueil",scr:"home"},
-          {icon:"📋",lbl:"Débrief",scr:"debrief"},
-          {icon:"💬",lbl:"Coach",scr:"chat"},
-          {icon:"👥",lbl:"Équipe",scr:"group"},
-          {icon:"📊",lbl:"Historique",scr:"history"},
-        ].map(it=>(
-          <button key={it.scr} onClick={()=>{if(it.scr==="debrief"){setQi(0);setAns({});setAiTxt("");setScore(null);}go(it.scr);}} style={{flex:1,padding:"10px 0",background:"transparent",border:"none",cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:3}}>
-            <span style={{fontSize:20}}>{it.icon}</span>
-            <span style={{fontSize:9,color:screen===it.scr?C.blue:C.textC,fontWeight:screen===it.scr?700:400,transition:"color 0.2s"}}>{it.lbl}</span>
-            {screen===it.scr&&<div style={{width:4,height:4,borderRadius:"50%",background:C.blue}}/>}
-          </button>
-        ))}
-      </div>
-    </div>
-  )}
-</div>
-```
-
-);
 }
 
-ReactDOM.createRoot(document.getElementById(“root”)).render(<App/>);
-</script>
-
-</body>
-</html>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <meta name="theme-color" content="#020617"/>
-  <meta name="apple-mobile-web-app-capable" content="yes"/>
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-  <meta name="apple-mobile-web-app-title" content="StressoCare"/>
-  <title>StressoCare</title>
-  <style>
-    *{margin:0;padding:0;box-sizing:border-box}
-    body{background:#020617;font-family:-apple-system,system-ui,sans-serif;color:#F0F9FF;overflow-x:hidden;-webkit-tap-highlight-color:transparent}
-    #root{min-height:100dvh}
-    ::-webkit-scrollbar{width:0;display:none}
-    *{scrollbar-width:none}
-    @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
-    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
-    @keyframes glow{0%,100%{box-shadow:0 0 20px rgba(56,189,248,0.3)}50%{box-shadow:0 0 35px rgba(56,189,248,0.6)}}
-  </style>
-</head>
-<body>
-<div id="root"></div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
-<script type="text/babel">
-const { useState, useEffect, useRef } = React;
-
-const C = {
-bg:”#020617”, cardSolid:”#0F172A”,
-card:“rgba(15,23,42,0.8)”,
-border:“rgba(56,189,248,0.15)”, borderHi:“rgba(56,189,248,0.3)”,
-blue:”#38BDF8”, blueD:”#0EA5E9”,
-green:”#34D399”, orange:”#FB923C”, red:”#F87171”,
-purple:”#A78BFA”, pink:”#F472B6”,
-text:”#F0F9FF”, textB:”#CBD5E1”, textC:”#64748B”, textD:”#334155”,
-};
-
-const QS = [
-{id:1,text:“Niveau de stress pendant cette urgence ?”,type:“scale”,min:“Calme”,max:“Intense”,icon:“🌡”},
-{id:2,text:“Difficultés avec les gestes techniques ?”,type:“choice”,icon:“🩺”,opts:[“Aucune”,“Légères”,“Importantes”,“Blocage”]},
-{id:3,text:“Communication avec votre équipe ?”,type:“choice”,icon:“💬”,opts:[“Très efficace”,“Efficace”,“Peu efficace”,“Absente”]},
-{id:4,text:“Facteurs de stress identifiés ?”,type:“multi”,icon:“🎯”,opts:[“Gravité de la situation”,“Manque expérience”,“Regard collègues”,“Isolement”,“Désorganisation”,“Peur erreur”]},
-{id:5,text:“Comment vous sentez-vous maintenant ?”,type:“emoji”,icon:“💭”,opts:[“😰”,“😟”,“😐”,“🙂”,“💪”]},
-];
-
-const SUPPORT = [
-“Prends soin de toi, on est là 💙”,
-“Courage, tu fais un boulot remarquable 🌟”,
-“On traverse ça ensemble 🤝”,
-“Ton ressenti est totalement légitime 🙏”,
-“Chaque urgence nous apprend quelque chose 💪”,
-];
-
-function makeAnalysis(a, sc) {
-const f = a[4] || [];
-let v = sc >= 70
-? “Ce que vous venez de vivre était particulièrement intense. Le ressenti que vous décrivez est tout à fait légitime — cette pression demande énormément sur le plan technique et émotionnel.”
-: sc >= 40
-? “Vous avez traversé une situation exigeante. Le stress ressenti est une réaction normale et saine, témoignant de votre engagement professionnel.”
-: “Vous semblez avoir bien géré cette situation. Votre capacité de régulation émotionnelle est réelle et précieuse dans ce métier.”;
-let an = f.includes(3)
-? “L’isolement ressort comme facteur central. Selon Edmondson, le sentiment d’être seul face à une décision critique amplifie considérablement la charge émotionnelle.”
-: (f.includes(1) && f.includes(5))
-? “Le manque d’expérience couplé à la peur de l’erreur évoque le modèle de Benner : vous êtes dans la phase novice-compétent. Chaque situation vécue et debriefée construit votre expertise.”
-: (f.includes(4) || (a[3]??0) >= 2)
-? “Les difficultés de communication ressortent fortement. Selon Mucchielli, quand la coordination manque, le stress individuel s’intensifie même chez les soignants expérimentés.”
-: “Selon Lazarus et Folkman, votre stress s’inscrit dans une réponse adaptative normale. L’équilibre entre sollicitations et ressources se construit avec l’expérience.”;
-let tips = [];
-if (sc >= 60) tips.push(“Faites un exercice de cohérence cardiaque maintenant — 3 min suffisent”);
-if (f.includes(3)) tips.push(“Identifiez 1-2 collègues vers qui vous tourner lors des prochaines urgences”);
-if (f.includes(4)||(a[3]??0)>=2) tips.push(“Proposez un debriefing collectif à votre cadre pour cette situation”);
-if (!tips.length) tips.push(“Continuez à analyser vos situations — c’est ce qui transforme l’expérience en compétence”);
-return v + “\n\n” + an + “\n\n> “ + tips.slice(0,2).join(”\n> “);
+function h(tag,attrs,…children){
+const el=document.createElement(tag);
+if(attrs)Object.entries(attrs).forEach(([k,v])=>{
+if(k===‘style’&&typeof v===‘object’)Object.assign(el.style,v);
+else if(k.startsWith(‘on’))el.addEventListener(k.slice(2).toLowerCase(),v);
+else if(k===‘className’)el.className=v;
+else el.setAttribute(k,v);
+});
+children.flat().forEach(c=>{if(c==null||c===false)return;el.appendChild(typeof c===‘string’||typeof c===‘number’?document.createTextNode(’’+c):c);});
+return el;
 }
 
-function makeJournalReply(txt) {
-if (/triste|pleur|mort/i.test(txt)) return “La tristesse face à certaines situations n’est pas un défaut professionnel — c’est le signe d’une humanité préservée.\n\nQu’est-ce qui vous a touché le plus dans cette situation ?”;
-if (/fatigu|epuis|crev/i.test(txt)) return “Vos mots laissent transparaître une fatigue qui n’est pas que physique. La nommer est déjà un acte de soin envers vous-même.\n\nDe quoi auriez-vous besoin maintenant pour vous ressourcer ?”;
-if (/doute|capable|nul/i.test(txt)) return “Le doute que vous exprimez est paradoxalement un signe de conscience professionnelle élevée.\n\nIdentifiez une force que vous avez démontrée aujourd’hui.”;
-if (/fier|reussi|content/i.test(txt)) return “Cette satisfaction mérite d’être pleinement accueillie. Ces moments construisent l’efficacité personnelle dont parle Bandura.\n\nComment capitaliser sur ce succès pour la prochaine fois ?”;
-return “Mettre des mots sur ce que l’on traverse est précieux. Selon Schön, c’est cette posture de praticien réflexif qui transforme l’expérience en compétence.\n\nQu’est-ce qui, dans cette situation, mérite d’être retenu ?”;
+function render(){
+const app=document.getElementById(‘app’);
+app.innerHTML=’’;
+if(S.screen===‘login’){app.appendChild(renderLogin());return;}
+app.appendChild(renderHeader());
+const scr=document.createElement(‘div’);scr.className=‘screen’;
+const map={home:renderHome,debrief:renderDebrief,score:renderScore,breath:renderBreath,journal:renderJournal,chat:renderChat,history:renderHistory,group:renderGroup};
+if(map[S.screen])scr.appendChild(map[S.screen]());
+app.appendChild(scr);
+app.appendChild(renderNav());
 }
 
-function makeChatReply(msg) {
-const m = msg.toLowerCase();
-if (/bonjour|salut|hello/.test(m)) return “Bonjour ! Comment vous sentez-vous aujourd’hui ?”;
-if (/depasse|submerge|trop|bout/.test(m)) return “Je vous entends. Quand on se sent dépassé, il faut d’abord se donner la permission de l’être. Qu’est-ce qui pèse le plus en ce moment ?”;
-if (/stress|anxie/.test(m)) return “Le stress fait partie de notre métier, mais sa gestion s’apprend. Qu’est-ce qui vous pèse le plus actuellement ?”;
-if (/peur|crainte|angoisse/.test(m)) return “La peur de mal faire est universelle chez les soignants consciencieux. De quoi avez-vous peur précisément ?”;
-if (/erreur|trompe|rate/.test(m)) return “Toute erreur analysée devient une opportunité d’apprentissage — c’est ce que Schön appelle la pratique réflexive. Que s’est-il passé ?”;
-if (/seul|solitude/.test(m)) return “Le sentiment d’isolement est l’un des facteurs de stress les plus puissants. Avez-vous des collègues vers qui vous tourner ?”;
-if (/fatigu|epuis/.test(m)) return “Cette fatigue n’est pas seulement physique. Qu’est-ce qui vous ressource habituellement ?”;
-if (/merci|super|genial/.test(m)) return “C’est avec plaisir. N’hésitez pas à revenir quand vous en aurez besoin.”;
-if (/au revoir|bye/.test(m)) return “À bientôt. Prenez soin de vous. 💙”;
-const r = [“Je vous entends. Pouvez-vous m’en dire un peu plus ?”,“Ce que vous partagez mérite réflexion. Qu’est-ce qui vous touche le plus ?”,“Qu’est-ce qui vous semble le plus difficile à porter en ce moment ?”];
-return r[Math.floor(Math.random()*r.length)];
+function renderLogin(){
+const w=h(‘div’,{style:{minHeight:‘100dvh’,display:‘flex’,flexDirection:‘column’,justifyContent:‘center’,padding:‘32px 18px’,gap:‘20px’,maxWidth:‘480px’,margin:‘0 auto’}});
+w.appendChild(h(‘div’,{style:{textAlign:‘center’,padding:‘20px 0’}},h(‘div’,{style:{fontSize:‘64px’,marginBottom:‘16px’,animation:‘float 3s infinite’}},‘💙’),h(‘h1’,{style:{fontSize:‘28px’,fontWeight:‘800’,letterSpacing:’-1px’,marginBottom:‘8px’}},‘StressoCare’),h(‘p’,{style:{fontSize:‘14px’,color:’#CBD5E1’,lineHeight:‘1.6’}},‘Votre assistant de soutien emotionnel post-urgence’)));
+const card=h(‘div’,{className:‘card’,style:{display:‘flex’,flexDirection:‘column’,gap:‘14px’}});
+card.appendChild(h(‘p’,{style:{fontSize:‘11px’,color:’#64748B’,fontWeight:‘600’,textTransform:‘uppercase’,letterSpacing:‘1.5px’}},‘Votre prenom’));
+const inp=h(‘input’,{type:‘text’,placeholder:‘Hugo’,onInput:e=>S.nameIn=e.target.value});
+inp.value=S.nameIn;card.appendChild(inp);
+card.appendChild(h(‘p’,{style:{fontSize:‘11px’,color:’#64748B’,fontWeight:‘600’,textTransform:‘uppercase’,letterSpacing:‘1.5px’}},‘Votre role’));
+const roles=h(‘div’,{style:{display:‘grid’,gridTemplateColumns:‘1fr 1fr 1fr’,gap:‘8px’}});
+[‘IDE’,‘Cadre’,‘AS’].forEach(r=>{roles.appendChild(h(‘button’,{style:{padding:‘12px 4px’,fontSize:‘13px’,fontWeight:‘600’,borderRadius:‘12px’,border:`1.5px solid ${S.roleIn===r?'#38BDF8':'rgba(56,189,248,0.15)'}`,background:S.roleIn===r?‘rgba(56,189,248,0.15)’:‘transparent’,color:S.roleIn===r?’#38BDF8’:’#64748B’,cursor:‘pointer’,fontFamily:‘inherit’},onClick:()=>{S.roleIn=r;render();}},r));});
+card.appendChild(roles);
+card.appendChild(h(‘button’,{className:‘btn-primary’,style:{opacity:S.nameIn.trim()?‘1’:‘0.5’},onClick:()=>{if(S.nameIn.trim()){S.name=S.nameIn.trim();S.role=S.roleIn;go(‘home’);}}},‘Commencer →’));
+w.appendChild(card);
+w.appendChild(h(‘p’,{style:{fontSize:‘10px’,color:’#334155’,textAlign:‘center’}},“Donnees locales · TIR infirmier IFSI Lens”));
+return w;
 }
 
-function TypeIn({text}) {
-const [d,setD]=useState(””); const [done,setDone]=useState(false);
-useEffect(()=>{
-setD(””); setDone(false); let i=0;
-const id=setInterval(()=>{if(i<text.length){setD(text.slice(0,i+1));i++;}else{setDone(true);clearInterval(id);}},13);
-return()=>clearInterval(id);
-},[text]);
-return React.createElement(React.Fragment,null,d,!done&&React.createElement(“span”,{style:{animation:“blink 0.8s infinite”,color:C.blue}},”|”));
+function renderHeader(){
+const hdr=h(‘div’,{className:‘header’});
+const inner=h(‘div’,{className:‘header-inner’});
+inner.appendChild(h(‘div’,{style:{display:‘flex’,alignItems:‘center’,gap:‘10px’}},h(‘div’,{className:‘logo’},‘💙’),h(‘div’,{},h(‘div’,{style:{display:‘flex’,alignItems:‘center’,gap:‘6px’}},h(‘span’,{style:{fontSize:‘17px’,fontWeight:‘700’,letterSpacing:’-0.5px’}},‘StressoCare’),h(‘span’,{style:{fontSize:‘9px’,color:’#A78BFA’,background:‘rgba(167,139,250,0.2)’,padding:‘2px 7px’,borderRadius:‘20px’,fontWeight:‘700’}},‘IA’)),h(‘span’,{style:{fontSize:‘10px’,color:’#64748B’}},S.name+’ · ‘+S.role))));
+if(S.screen!==‘home’)inner.appendChild(h(‘button’,{style:{background:‘rgba(56,189,248,0.1)’,border:‘1px solid rgba(56,189,248,0.15)’,color:’#38BDF8’,fontSize:‘11px’,fontWeight:‘600’,padding:‘7px 14px’,borderRadius:‘100px’,cursor:‘pointer’,fontFamily:‘inherit’},onClick:()=>go(‘home’)},‘← Accueil’));
+hdr.appendChild(inner);return hdr;
 }
 
-function BreathOrb({onDone}) {
-const [pi,setPi]=useState(0); const [cnt,setCnt]=useState(4);
-const [cyc,setCyc]=useState(0); const cr=useRef(0);
-const PH=[{label:“Inspirez”,dur:4,col:C.blue,sc:1.4},{label:“Retenez”,dur:4,col:C.purple,sc:1.4},{label:“Expirez”,dur:6,col:C.green,sc:1}];
-useEffect(()=>{
-let pIdx=0,c=PH[0].dur; setPi(0); setCnt(c);
-const id=setInterval(()=>{
-c–;
-if(c<=0){pIdx++;if(pIdx>=PH.length){pIdx=0;cr.current++;setCyc(cr.current);if(cr.current>=3){clearInterval(id);onDone();return;}}c=PH[pIdx].dur;setPi(pIdx);}
-setCnt(c);
-},1000);
-return()=>clearInterval(id);
-},[]);
-const p=PH[pi];
-return (
-<div style={{display:“flex”,flexDirection:“column”,alignItems:“center”,gap:24,padding:“20px 0”}}>
-<div style={{display:“flex”,gap:6}}>{[0,1,2].map(i=><div key={i} style={{width:28,height:4,borderRadius:4,background:i<cyc?C.green:i===cyc?p.col:C.textD,transition:“all 0.4s”}}/>)}</div>
-<div style={{position:“relative”,width:220,height:220}}>
-<div style={{position:“absolute”,inset:-20,borderRadius:“50%”,background:`radial-gradient(circle,${p.col}20 0%,transparent 60%)`,filter:“blur(20px)”,transform:`scale(${p.sc})`,transition:`transform ${p.dur}s ease-in-out`}}/>
-<div style={{position:“absolute”,inset:0,borderRadius:“50%”,border:`2px solid ${p.col}80`,transform:`scale(${p.sc})`,transition:`transform ${p.dur}s ease-in-out`}}/>
-<div style={{position:“absolute”,inset:28,borderRadius:“50%”,border:`1.5px solid ${p.col}`,transform:`scale(${p.sc})`,transition:`transform ${p.dur}s ease-in-out`,display:“flex”,flexDirection:“column”,alignItems:“center”,justifyContent:“center”}}>
-<span style={{fontSize:52,fontWeight:200,color:p.col}}>{cnt}</span>
-<span style={{fontSize:11,color:p.col,fontWeight:600,letterSpacing:3,textTransform:“uppercase”}}>{p.label}</span>
-</div>
-</div>
-<p style={{fontSize:12,color:C.textC,textAlign:“center”,lineHeight:1.6}}>Méthode 4-4-6 · Cohérence cardiaque</p>
-</div>
-);
+function renderNav(){
+const nav=h(‘div’,{className:‘nav’});
+const inner=h(‘div’,{className:‘nav-inner’});
+[{icon:‘🏠’,lbl:‘Accueil’,scr:‘home’},{icon:‘📋’,lbl:‘Debrief’,scr:‘debrief’},{icon:‘💬’,lbl:‘Coach’,scr:‘chat’},{icon:‘👥’,lbl:‘Equipe’,scr:‘group’},{icon:‘📊’,lbl:‘Historique’,scr:‘history’}].forEach(it=>{
+const active=S.screen===it.scr;
+inner.appendChild(h(‘button’,{className:‘nav-btn’,onClick:()=>{if(it.scr===‘debrief’){S.qi=0;S.ans={};S.aiTxt=’’;S.score=null;S.ansMulti=[];}go(it.scr);}},h(‘span’,{},’’+it.icon),h(‘span’,{style:{fontSize:‘9px’,color:active?’#38BDF8’:’#64748B’,fontWeight:active?‘700’:‘400’}},it.lbl),…(active?[h(‘div’,{className:‘nav-dot’})]:[])
+));
+});
+nav.appendChild(inner);return nav;
 }
 
-function Ring({score}) {
-const col=score<40?C.green:score<70?C.orange:C.red;
-const lbl=score<40?“Stress maîtrisé”:score<70?“Stress modéré”:“Stress élevé”;
-const [a,setA]=useState(0);
-useEffect(()=>{const id=setTimeout(()=>setA(score),150);return()=>clearTimeout(id);},[score]);
+function renderHome(){
+const div=h(‘div’,{style:{display:‘flex’,flexDirection:‘column’,gap:‘14px’,paddingTop:‘20px’}});
+div.appendChild(h(‘div’,{className:‘card’,style:{background:‘linear-gradient(135deg,rgba(56,189,248,0.07),rgba(167,139,250,0.07))’,padding:‘22px’}},h(‘p’,{style:{fontSize:‘11px’,color:’#38BDF8’,fontWeight:‘700’,textTransform:‘uppercase’,letterSpacing:‘2px’,marginBottom:‘8px’}},‘Bonjour ‘+S.name),h(‘h2’,{style:{fontSize:‘22px’,fontWeight:‘700’,lineHeight:‘1.25’,marginBottom:‘8px’}},‘Comment se passe votre journee ?’),h(‘p’,{style:{fontSize:‘13px’,color:’#CBD5E1’,lineHeight:‘1.6’}},“Votre assistant IA est la pour vous accompagner apres chaque urgence.”)));
+div.appendChild(h(‘button’,{className:‘card’,style:{padding:‘18px’,cursor:‘pointer’,textAlign:‘left’,display:‘flex’,alignItems:‘center’,gap:‘14px’,background:‘linear-gradient(135deg,rgba(56,189,248,0.12),rgba(56,189,248,0.03))’,border:‘1px solid rgba(56,189,248,0.3)’,width:‘100%’,fontFamily:‘inherit’},onClick:()=>{S.qi=0;S.ans={};S.aiTxt=’’;S.score=null;S.ansMulti=[];go(‘debrief’);}},h(‘div’,{style:{width:‘50px’,height:‘50px’,borderRadius:‘15px’,background:‘linear-gradient(135deg,#38BDF8,#0EA5E9)’,display:‘flex’,alignItems:‘center’,justifyContent:‘center’,fontSize:‘24px’,flexShrink:‘0’}},‘📋’),h(‘div’,{style:{flex:‘1’}},h(‘p’,{style:{fontSize:‘15px’,fontWeight:‘700’,marginBottom:‘3px’,color:’#F0F9FF’}},‘Debriefing IA’),h(‘p’,{style:{fontSize:‘12px’,color:’#CBD5E1’}},‘5 questions · Analyse personnalisee’)),h(‘span’,{style:{color:’#38BDF8’,fontSize:‘20px’}},‘→’)));
+div.appendChild(h(‘button’,{className:‘card’,style:{padding:‘16px’,cursor:‘pointer’,textAlign:‘left’,display:‘flex’,alignItems:‘center’,gap:‘12px’,background:‘linear-gradient(135deg,rgba(167,139,250,0.1),rgba(52,211,153,0.05))’,border:‘1px solid rgba(167,139,250,0.3)’,width:‘100%’,fontFamily:‘inherit’},onClick:()=>go(‘group’)},h(‘div’,{style:{width:‘46px’,height:‘46px’,borderRadius:‘14px’,background:‘linear-gradient(135deg,#A78BFA,#F472B6)’,display:‘flex’,alignItems:‘center’,justifyContent:‘center’,fontSize:‘22px’,flexShrink:‘0’}},‘👥’),h(‘div’,{style:{flex:‘1’}},h(‘p’,{style:{fontSize:‘14px’,fontWeight:‘700’,marginBottom:‘2px’,color:’#F0F9FF’}},‘Espace equipe’),h(‘p’,{style:{fontSize:‘12px’,color:’#CBD5E1’}},‘Soutien · Debriefing collectif’)),h(‘span’,{style:{color:’#A78BFA’,fontSize:‘20px’}},‘→’)));
+const grid=h(‘div’,{style:{display:‘grid’,gridTemplateColumns:‘1fr 1fr’,gap:‘12px’}});
+[{icon:‘🌬’,lbl:‘Respiration’,desc:‘3 min’,scr:‘breath’,col:’#34D399’},{icon:‘💬’,lbl:‘Coach IA’,desc:‘Conversation’,scr:‘chat’,col:’#A78BFA’},{icon:‘📓’,lbl:‘Journal’,desc:‘IA reflexive’,scr:‘journal’,col:’#F472B6’},{icon:‘📊’,lbl:‘Historique’,desc:‘Mon evolution’,scr:‘history’,col:’#FB923C’}].forEach(it=>{
+grid.appendChild(h(‘button’,{className:‘card’,style:{padding:‘16px’,cursor:‘pointer’,textAlign:‘left’,width:‘100%’,fontFamily:‘inherit’},onClick:()=>{if(it.scr===‘breath’){S.breathDone=false;S.breathPhase=-1;S.breathCyc=0;}go(it.scr);}},h(‘div’,{style:{width:‘40px’,height:‘40px’,borderRadius:‘12px’,background:it.col+‘22’,border:‘1px solid ‘+it.col+‘40’,display:‘flex’,alignItems:‘center’,justifyContent:‘center’,fontSize:‘20px’,marginBottom:‘10px’}},’’+it.icon),h(‘p’,{style:{fontSize:‘14px’,fontWeight:‘700’,marginBottom:‘2px’,color:’#F0F9FF’}},it.lbl),h(‘p’,{style:{fontSize:‘11px’,color:’#64748B’}},it.desc)));
+});
+div.appendChild(grid);
+if(S.hist.length){const lh=S.hist[0];const col=sc2col(lh.score);div.appendChild(h(‘div’,{className:‘card’,style:{padding:‘14px’,display:‘flex’,alignItems:‘center’,gap:‘12px’,background:‘linear-gradient(135deg,’+col+‘15,transparent)’,border:‘1px solid ‘+col+‘30’}},h(‘span’,{style:{fontSize:‘24px’}},lh.score<40?‘✅’:lh.score<70?‘⚠️’:‘🔴’),h(‘div’,{},h(‘p’,{style:{fontSize:‘13px’,fontWeight:‘600’,color:col}},‘Derniere session — ‘+lh.date),h(‘p’,{style:{fontSize:‘11px’,color:’#64748B’}},lh.sit+’ · Score ‘+lh.score+’/100’))));}
+return div;
+}
+
+function renderDebrief(){
+const div=h(‘div’,{style:{display:‘flex’,flexDirection:‘column’,gap:‘18px’,paddingTop:‘20px’}});
+const q=QS[S.qi];
+const bar=h(‘div’,{style:{display:‘flex’,gap:‘4px’}});
+QS.forEach((_,i)=>bar.appendChild(h(‘div’,{style:{flex:‘1’,height:‘4px’,borderRadius:‘4px’,background:i<=S.qi?‘linear-gradient(90deg,#38BDF8,#A78BFA)’:’#334155’}})));
+div.appendChild(bar);
+div.appendChild(h(‘p’,{style:{fontSize:‘12px’,color:’#64748B’,fontWeight:‘600’}},(S.qi+1)+’ sur ‘+QS.length));
+const card=h(‘div’,{className:‘card’});
+card.appendChild(h(‘div’,{style:{display:‘flex’,alignItems:‘center’,gap:‘10px’,marginBottom:‘18px’}},h(‘span’,{style:{fontSize:‘24px’}},’’+q.icon),h(‘p’,{style:{fontSize:‘17px’,fontWeight:‘700’,lineHeight:‘1.4’,flex:‘1’,color:’#F0F9FF’}},q.text)));
+
+if(q.type===‘scale’){
+const sw=h(‘div’,{style:{display:‘flex’,flexDirection:‘column’,gap:‘16px’}});
+const valEl=h(‘span’,{style:{fontSize:‘64px’,fontWeight:‘200’,color:’#38BDF8’,letterSpacing:’-3px’,lineHeight:‘1’}},’’+S.slid);
+sw.appendChild(h(‘div’,{style:{textAlign:‘center’}},valEl,h(‘span’,{style:{fontSize:‘16px’,color:’#64748B’,marginLeft:‘6px’}},’/10’)));
+const slider=h(‘input’,{type:‘range’,min:‘1’,max:‘10’,style:{width:‘100%’,accentColor:’#38BDF8’},onInput:e=>{S.slid=+e.target.value;valEl.textContent=S.slid;}});
+slider.value=S.slid;sw.appendChild(slider);
+sw.appendChild(h(‘div’,{style:{display:‘flex’,justifyContent:‘space-between’}},h(‘span’,{style:{fontSize:‘11px’,color:’#64748B’}},q.min),h(‘span’,{style:{fontSize:‘11px’,color:’#64748B’}},q.max)));
+sw.appendChild(h(‘button’,{className:‘btn-primary’,onClick:()=>doAnswer(S.slid)},‘Continuer →’));
+card.appendChild(sw);
+}
+if(q.type===‘choice’){
+const opts=h(‘div’,{style:{display:‘flex’,flexDirection:‘column’,gap:‘10px’}});
+q.opts.forEach((o,i)=>opts.appendChild(h(‘button’,{style:{background:‘rgba(56,189,248,0.05)’,border:‘1px solid rgba(56,189,248,0.15)’,borderRadius:‘13px’,padding:‘14px 16px’,textAlign:‘left’,color:’#F0F9FF’,fontSize:‘14px’,cursor:‘pointer’,fontFamily:‘inherit’},onClick:()=>doAnswer(i)},o)));
+card.appendChild(opts);
+}
+if(q.type===‘multi’){
+if(!S.ansMulti)S.ansMulti=[];
+const opts=h(‘div’,{style:{display:‘flex’,flexDirection:‘column’,gap:‘10px’}});
+q.opts.forEach((o,i)=>{
+const sel=S.ansMulti.includes(i);
+opts.appendChild(h(‘button’,{style:{background:sel?‘rgba(56,189,248,0.18)’:‘rgba(56,189,248,0.05)’,border:‘1.5px solid ‘+(sel?’#38BDF8’:‘rgba(56,189,248,0.15)’),borderRadius:‘13px’,padding:‘12px 16px’,textAlign:‘left’,color:sel?’#38BDF8’:’#F0F9FF’,fontSize:‘14px’,cursor:‘pointer’,display:‘flex’,alignItems:‘center’,gap:‘10px’,fontFamily:‘inherit’},onClick:()=>{if(S.ansMulti.includes(i))S.ansMulti=S.ansMulti.filter(x=>x!==i);else S.ansMulti=[…S.ansMulti,i];render();}},h(‘div’,{style:{width:‘18px’,height:‘18px’,borderRadius:‘6px’,border:‘1.5px solid ‘+(sel?’#38BDF8’:’#334155’),background:sel?’#38BDF8’:‘transparent’,display:‘flex’,alignItems:‘center’,justifyContent:‘center’,flexShrink:‘0’}},sel?h(‘span’,{style:{color:’#000’,fontSize:‘11px’,fontWeight:‘900’}},‘✓’):’’),o));
+});
+opts.appendChild(h(‘button’,{className:‘btn-primary’,style:{marginTop:‘6px’},onClick:()=>doAnswer([…S.ansMulti])},‘Continuer →’));
+card.appendChild(opts);
+}
+if(q.type===‘emoji’){
+const opts=h(‘div’,{style:{display:‘flex’,justifyContent:‘space-around’,padding:‘16px 0’}});
+q.opts.forEach((em,i)=>opts.appendChild(h(‘button’,{style:{background:‘none’,border:‘none’,fontSize:‘42px’,cursor:‘pointer’,padding:‘8px’},onClick:()=>doAnswer(i)},’’+em)));
+card.appendChild(opts);
+}
+div.appendChild(card);return div;
+}
+
+function doAnswer(val){
+S.ans[QS[S.qi].id]=val;
+if(S.qi<QS.length-1){S.qi++;S.ansMulti=[];render();}
+else{const sc=compScore();S.score=sc;S.hist=[{date:today(),sit:‘Urgence vitale’,score:sc},…S.hist].slice(0,5);S.aiLoading=true;S.aiTxt=’’;go(‘score’);delay(()=>makeAnalysis(sc),2000).then(t=>{S.aiTxt=t;S.aiLoading=false;render();});}
+}
+
+function renderScore(){
+const div=h(‘div’,{style:{display:‘flex’,flexDirection:‘column’,gap:‘16px’,paddingTop:‘20px’}});
+const sc=S.score;const col=sc2col(sc);const lbl=sc<40?‘Stress maitrise’:sc<70?‘Stress modere’:‘Stress eleve’;
+const scoreCard=h(‘div’,{className:‘card’,style:{textAlign:‘center’,padding:‘24px’}});
+scoreCard.appendChild(h(‘p’,{style:{fontSize:‘11px’,color:’#38BDF8’,fontWeight:‘700’,textTransform:‘uppercase’,letterSpacing:‘2px’,marginBottom:‘18px’}},‘Votre score’));
+const svgNS=‘http://www.w3.org/2000/svg’;
+const svg=document.createElementNS(svgNS,‘svg’);svg.setAttribute(‘width’,‘190’);svg.setAttribute(‘height’,‘190’);svg.style.transform=‘rotate(-90deg)’;svg.style.display=‘block’;svg.style.margin=‘0 auto’;
 const circ=2*Math.PI*75;
-return (
-<div style={{display:“flex”,flexDirection:“column”,alignItems:“center”,gap:14}}>
-<div style={{position:“relative”,width:190,height:190}}>
-<svg width=“190” height=“190” style={{transform:“rotate(-90deg)”}}>
-<circle cx="95" cy="95" r="75" fill="none" stroke="rgba(56,189,248,0.1)" strokeWidth="10"/>
-<circle cx=“95” cy=“95” r=“75” fill=“none” stroke={col} strokeWidth=“10”
-strokeDasharray={circ} strokeDashoffset={circ-(a/100)*circ}
-strokeLinecap=“round” style={{transition:“stroke-dashoffset 1.8s ease”}}/>
-</svg>
-<div style={{position:“absolute”,inset:0,display:“flex”,flexDirection:“column”,alignItems:“center”,justifyContent:“center”}}>
-<span style={{fontSize:52,fontWeight:200,color:col}}>{Math.round(a)}</span>
-<span style={{fontSize:11,color:C.textC,letterSpacing:2,textTransform:“uppercase”}}>sur 100</span>
-</div>
-</div>
-<div style={{background:`${col}18`,border:`1px solid ${col}30`,borderRadius:100,padding:“7px 20px”}}>
-<span style={{fontSize:14,fontWeight:600,color:col}}>{lbl}</span>
-</div>
-</div>
-);
+const bg=document.createElementNS(svgNS,‘circle’);bg.setAttribute(‘cx’,‘95’);bg.setAttribute(‘cy’,‘95’);bg.setAttribute(‘r’,‘75’);bg.setAttribute(‘fill’,‘none’);bg.setAttribute(‘stroke’,‘rgba(56,189,248,0.1)’);bg.setAttribute(‘stroke-width’,‘10’);
+const fg=document.createElementNS(svgNS,‘circle’);fg.setAttribute(‘cx’,‘95’);fg.setAttribute(‘cy’,‘95’);fg.setAttribute(‘r’,‘75’);fg.setAttribute(‘fill’,‘none’);fg.setAttribute(‘stroke’,col);fg.setAttribute(‘stroke-width’,‘10’);fg.setAttribute(‘stroke-linecap’,‘round’);fg.setAttribute(‘stroke-dasharray’,’’+circ);fg.setAttribute(‘stroke-dashoffset’,’’+circ);fg.style.transition=‘stroke-dashoffset 1.8s ease’;
+svg.appendChild(bg);svg.appendChild(fg);
+const svgW=h(‘div’,{style:{position:‘relative’,width:‘190px’,height:‘190px’,margin:‘0 auto’}});
+svgW.appendChild(svg);
+svgW.appendChild(h(‘div’,{style:{position:‘absolute’,inset:‘0’,display:‘flex’,flexDirection:‘column’,alignItems:‘center’,justifyContent:‘center’}},h(‘span’,{style:{fontSize:‘52px’,fontWeight:‘200’,color:col,lineHeight:‘1’}},’’+sc),h(‘span’,{style:{fontSize:‘11px’,color:’#64748B’,letterSpacing:‘2px’,textTransform:‘uppercase’}},‘sur 100’)));
+scoreCard.appendChild(svgW);
+setTimeout(()=>fg.setAttribute(‘stroke-dashoffset’,’’+(circ-(sc/100)*circ)),100);
+scoreCard.appendChild(h(‘div’,{style:{background:col+‘18’,border:’1px solid ’+col+‘30’,borderRadius:‘100px’,padding:‘7px 20px’,display:‘inline-block’,marginTop:‘14px’}},h(‘span’,{style:{fontSize:‘14px’,fontWeight:‘600’,color:col}},lbl)));
+div.appendChild(scoreCard);
+
+const aiCard=h(‘div’,{className:‘card’,style:{background:‘linear-gradient(135deg,rgba(167,139,250,0.1),rgba(56,189,248,0.05))’,border:‘1px solid rgba(167,139,250,0.3)’}});
+aiCard.appendChild(h(‘div’,{style:{display:‘flex’,alignItems:‘center’,gap:‘10px’,marginBottom:‘14px’}},h(‘div’,{style:{width:‘34px’,height:‘34px’,borderRadius:‘10px’,background:‘linear-gradient(135deg,#A78BFA,#38BDF8)’,display:‘flex’,alignItems:‘center’,justifyContent:‘center’,fontSize:‘16px’}},‘✨’),h(‘div’,{},h(‘p’,{style:{fontSize:‘14px’,fontWeight:‘700’,color:’#F0F9FF’}},‘Analyse IA’),h(‘p’,{style:{fontSize:‘11px’,color:’#A78BFA’}},‘Personnalisee pour vous’))));
+if(S.aiLoading){aiCard.appendChild(h(‘div’,{style:{display:‘flex’,alignItems:‘center’,gap:‘8px’}},h(‘div’,{style:{width:‘14px’,height:‘14px’,border:‘2px solid #A78BFA’,borderTopColor:‘transparent’,borderRadius:‘50%’,animation:‘spin 0.8s linear infinite’}}),h(‘span’,{style:{fontSize:‘12px’,color:’#64748B’}},‘Analyse en cours…’)));}
+else if(S.aiTxt){aiCard.appendChild(h(‘p’,{style:{fontSize:‘13px’,color:’#CBD5E1’,lineHeight:‘1.75’,whiteSpace:‘pre-wrap’}},S.aiTxt));}
+div.appendChild(aiCard);
+div.appendChild(h(‘button’,{className:‘btn-primary’,onClick:()=>{S.breathDone=false;S.breathPhase=-1;S.breathCyc=0;go(‘breath’);}},‘🌬 Exercice de respiration’));
+div.appendChild(h(‘button’,{className:‘btn-secondary’,onClick:()=>go(‘home’)},“Retour a l’accueil”));
+return div;
 }
 
-function Dots({color}) {
-return <div style={{display:“flex”,gap:4}}>{[0,0.2,0.4].map(d=><div key={d} style={{width:7,height:7,borderRadius:“50%”,background:color,animation:“pulse 1.2s infinite”,animationDelay:`${d}s`}}/>)}</div>;
+let breathTimer=null;
+function renderBreath(){
+const div=h(‘div’,{style:{display:‘flex’,flexDirection:‘column’,gap:‘16px’,paddingTop:‘20px’}});
+div.appendChild(h(‘div’,{className:‘card’},h(‘p’,{style:{fontSize:‘11px’,color:’#34D399’,fontWeight:‘700’,textTransform:‘uppercase’,letterSpacing:‘2px’,marginBottom:‘6px’}},‘Coherence cardiaque’),h(‘p’,{style:{fontSize:‘15px’,fontWeight:‘700’,marginBottom:‘4px’,color:’#F0F9FF’}},‘Respirez avec le cercle’),h(‘p’,{style:{fontSize:‘12px’,color:’#CBD5E1’,lineHeight:‘1.6’}},‘3 cycles · Methode 4-4-6’)));
+const card=h(‘div’,{className:‘card’});
+if(S.breathDone){
+card.appendChild(h(‘div’,{style:{textAlign:‘center’,padding:‘36px 0’}},h(‘div’,{style:{fontSize:‘60px’,marginBottom:‘14px’,animation:‘float 2s infinite’}},‘✨’),h(‘p’,{style:{fontSize:‘18px’,fontWeight:‘700’,color:’#34D399’,marginBottom:‘10px’}},‘Bien joue’),h(‘p’,{style:{fontSize:‘13px’,color:’#CBD5E1’,lineHeight:‘1.7’,marginBottom:‘24px’}},‘Votre rythme cardiaque devrait se stabiliser.’),h(‘button’,{className:‘btn-primary’,onClick:()=>go(‘home’)},“Retour a l’accueil”)));
+} else {
+if(breathTimer)clearInterval(breathTimer);
+if(S.breathPhase===-1){S.breathPhase=0;S.breathCnt=PHASES[0].dur;S.breathCyc=0;}
+const ph=PHASES[S.breathPhase];
+const cycBar=h(‘div’,{style:{display:‘flex’,gap:‘6px’,justifyContent:‘center’,marginBottom:‘24px’}});
+[0,1,2].forEach(i=>cycBar.appendChild(h(‘div’,{style:{width:‘28px’,height:‘4px’,borderRadius:‘4px’,background:i<S.breathCyc?’#34D399’:i===S.breathCyc?ph.col:’#334155’}})));
+card.appendChild(cycBar);
+const orb=h(‘div’,{style:{width:‘200px’,height:‘200px’,borderRadius:‘50%’,border:‘2px solid ‘+ph.col,display:‘flex’,alignItems:‘center’,justifyContent:‘center’,flexDirection:‘column’,margin:‘0 auto’,transition:‘transform ‘+ph.dur+‘s ease-in-out’,transform:‘scale(1)’}});
+const cntEl=h(‘span’,{style:{fontSize:‘52px’,fontWeight:‘200’,color:ph.col,lineHeight:‘1’}},’’+S.breathCnt);
+orb.appendChild(cntEl);orb.appendChild(h(‘span’,{style:{fontSize:‘11px’,color:ph.col,fontWeight:‘600’,letterSpacing:‘3px’,textTransform:‘uppercase’}},ph.label));
+card.appendChild(orb);card.appendChild(h(‘p’,{style:{fontSize:‘12px’,color:’#64748B’,textAlign:‘center’,marginTop:‘24px’}},‘Methode 4-4-6’));
+setTimeout(()=>{orb.style.transform=S.breathPhase===2?‘scale(1)’:‘scale(1.4)’;},100);
+breathTimer=setInterval(()=>{
+S.breathCnt–;
+if(S.breathCnt<=0){S.breathPhase++;if(S.breathPhase>=PHASES.length){S.breathPhase=0;S.breathCyc++;}if(S.breathCyc>=3){clearInterval(breathTimer);S.breathDone=true;render();return;}S.breathCnt=PHASES[S.breathPhase].dur;render();return;}
+cntEl.textContent=S.breathCnt;
+},1000);
+}
+div.appendChild(card);return div;
 }
 
-function Toggle({on,onChange}) {
-return (
-<button onClick={()=>onChange(!on)} style={{width:40,height:22,borderRadius:100,background:on?C.purple:C.textD,border:“none”,cursor:“pointer”,position:“relative”,transition:“background 0.3s”,flexShrink:0}}>
-<div style={{position:“absolute”,top:3,left:on?20:3,width:16,height:16,borderRadius:“50%”,background:”#fff”,transition:“left 0.3s”}}/>
-</button>
-);
+function renderJournal(){
+const div=h(‘div’,{style:{display:‘flex’,flexDirection:‘column’,gap:‘14px’,paddingTop:‘20px’}});
+div.appendChild(h(‘div’,{className:‘card’,style:{background:‘linear-gradient(135deg,rgba(244,114,182,0.1),transparent)’,border:‘1px solid rgba(244,114,182,0.3)’,padding:‘16px’}},h(‘div’,{style:{display:‘flex’,alignItems:‘center’,gap:‘10px’}},h(‘div’,{style:{width:‘38px’,height:‘38px’,borderRadius:‘12px’,background:‘linear-gradient(135deg,#F472B6,#A78BFA)’,display:‘flex’,alignItems:‘center’,justifyContent:‘center’,fontSize:‘18px’}},‘📓’),h(‘div’,{},h(‘p’,{style:{fontSize:‘14px’,fontWeight:‘700’,color:’#F0F9FF’}},‘Journal reflexif’),h(‘p’,{style:{fontSize:‘11px’,color:’#F472B6’}},‘Confidentiel’)))));
+const msgs=h(‘div’,{className:‘card’,style:{padding:‘14px’,minHeight:‘220px’,display:‘flex’,flexDirection:‘column’,gap:‘10px’}});
+if(!S.jMsgs.length)msgs.appendChild(h(‘p’,{style:{fontSize:‘13px’,color:’#64748B’,fontStyle:‘italic’,lineHeight:‘1.6’}},“Ecrivez librement ce que vous avez vecu.”));
+S.jMsgs.forEach(m=>{const row=h(‘div’,{style:{display:‘flex’,justifyContent:m.r===‘user’?‘flex-end’:‘flex-start’}});row.appendChild(h(‘div’,{className:m.r===‘user’?‘bubble-user’:‘bubble-ai bubble-ai-pink’},m.t));msgs.appendChild(row);});
+if(S.jLoad){const row=h(‘div’,{style:{display:‘flex’,justifyContent:‘flex-start’}});const dots=h(‘div’,{className:‘bubble-ai bubble-ai-pink’,style:{display:‘flex’,gap:‘4px’,alignItems:‘center’}});[0,200,400].forEach(d=>{const dot=h(‘div’,{style:{width:‘7px’,height:‘7px’,borderRadius:‘50%’,background:’#F472B6’,animation:‘pulse 1.2s infinite’,animationDelay:d+‘ms’}});dots.appendChild(dot);});row.appendChild(dots);msgs.appendChild(row);}
+div.appendChild(msgs);
+const inputRow=h(‘div’,{style:{display:‘flex’,gap:‘10px’,alignItems:‘flex-end’}});
+const ta=h(‘textarea’,{placeholder:S.jMsgs.length===0?“Aujourd’hui j’ai vecu…”:“Repondez…”,rows:‘2’,style:{flex:‘1’,borderColor:‘rgba(244,114,182,0.35)’},onInput:e=>S.jIn=e.target.value});
+ta.value=S.jIn;
+ta.addEventListener(‘keydown’,e=>{if(e.key===‘Enter’&&!e.shiftKey){e.preventDefault();doJournal();}});
+inputRow.appendChild(ta);inputRow.appendChild(h(‘button’,{style:{width:‘46px’,height:‘46px’,borderRadius:‘50%’,background:‘linear-gradient(135deg,#F472B6,#A78BFA)’,border:‘none’,color:’#fff’,fontSize:‘20px’,cursor:‘pointer’,flexShrink:‘0’},onClick:doJournal},‘↑’));
+div.appendChild(inputRow);
+if(!S.jMsgs.length){const chips=h(‘div’,{style:{display:‘flex’,gap:‘8px’,flexWrap:‘wrap’}});[“J’ai vecu une urgence difficile”,“Je me sens epuise”,“Je doute de moi”].forEach(s=>chips.appendChild(h(‘button’,{className:‘chip chip-pink’,onClick:()=>{S.jIn=s;render();}},s)));div.appendChild(chips);}
+if(S.jMsgs.length)div.appendChild(h(‘button’,{className:‘btn-secondary’,onClick:()=>{S.jMsgs=[];render();}},‘Nouvelle entree’));
+return div;
 }
 
-function App() {
-const [screen,setScreen]=useState(“login”);
-const [anim,setAnim]=useState(true);
-const [name,setName]=useState(””); const [role,setRole]=useState(“IDE”);
-const [nameIn,setNameIn]=useState(””); const [roleIn,setRoleIn]=useState(“IDE”);
-const [qi,setQi]=useState(0); const [ans,setAns]=useState({});
-const [slid,setSlid]=useState(5); const [score,setScore]=useState(null);
-const [aiTxt,setAiTxt]=useState(””); const [aiLoading,setAiLoading]=useState(false);
-const [hist,setHist]=useState([
-{date:“28 Avr”,sit:“Arrêt cardiaque”,score:58,col:C.orange},
-{date:“21 Avr”,sit:“Détresse respiratoire”,score:44,col:C.orange},
-{date:“14 Avr”,sit:“Infarctus”,score:29,col:C.green},
-]);
-const [breathDone,setBreathDone]=useState(false);
-const [jMsgs,setJMsgs]=useState([]); const [jIn,setJIn]=useState(””); const [jLoad,setJLoad]=useState(false);
-const jEnd=useRef(null);
-const [cMsgs,setCMsgs]=useState([{r:“ai”,t:“Bonjour ! Je suis votre assistant. Comment vous sentez-vous aujourd’hui ?”}]);
-const [cIn,setCIn]=useState(””); const [cLoad,setCLoad]=useState(false);
-const cEnd=useRef(null);
-const [gTab,setGTab]=useState(“dash”);
-const [gSessions,setGSessions]=useState([]);
-const [gMsgs,setGMsgs]=useState([
-{id:1,auth:“IDE #4”,txt:“Journée difficile, merci à tous 🙏”,time:“18:42”,req:false},
-{id:2,auth:“IDE #2”,txt:“On est là ! Courage 💙”,time:“18:45”,req:false},
-]);
-const [gIn,setGIn]=useState(””); const [anon,setAnon]=useState(true); const [debReq,setDebReq]=useState(false);
-const gEnd=useRef(null);
-const [time,setTime]=useState(“9:41”);
+async function doJournal(){if(!S.jIn.trim()||S.jLoad)return;const inp=S.jIn;S.jMsgs=[…S.jMsgs,{r:‘user’,t:inp}];S.jIn=’’;S.jLoad=true;render();const rep=await delay(()=>makeReply(inp),1600);S.jMsgs=[…S.jMsgs,{r:‘ai’,t:rep}];S.jLoad=false;render();}
 
-useEffect(()=>{
-const upd=()=>{const d=new Date();setTime(`${d.getHours()}:${String(d.getMinutes()).padStart(2,"0")}`);};
-upd(); const id=setInterval(upd,30000); return()=>clearInterval(id);
-},[]);
-
-useEffect(()=>{cEnd.current?.scrollIntoView({behavior:“smooth”});},[cMsgs,cLoad]);
-useEffect(()=>{jEnd.current?.scrollIntoView({behavior:“smooth”});},[jMsgs,jLoad]);
-useEffect(()=>{gEnd.current?.scrollIntoView({behavior:“smooth”});},[gMsgs]);
-
-const go=(s)=>{setAnim(false);setTimeout(()=>{setScreen(s);setAnim(true);},200);};
-const sc2col=(s)=>s<40?C.green:s<70?C.orange:C.red;
-const today=()=>{const d=new Date();return `${d.getDate()} ${["Jan","Fév","Mar","Avr","Mai","Jun","Jul","Aoû","Sep","Oct","Nov","Déc"][d.getMonth()]}`;};
-const delay=(fn,ms)=>new Promise(r=>setTimeout(()=>r(fn()),ms+Math.random()*600));
-
-const compScore=(a)=>{
-let s=0;
-if(a[1])s+=a[1]*5;
-if(a[2]!==undefined)s+=[0,5,10,15][a[2]];
-if(a[3]!==undefined)s+=[0,5,10,15][a[3]];
-if(a[4])s+=Math.min(a[4].length*3,15);
-if(a[5]!==undefined)s+=[5,4,2,1,0][a[5]];
-return Math.min(Math.round(s),100);
-};
-
-const doAnswer=(val)=>{
-const na={…ans,[QS[qi].id]:val};
-setAns(na);
-if(qi<QS.length-1){setAnim(false);setTimeout(()=>{setQi(qi+1);setSlid(5);setAnim(true);},200);}
-else{
-const sc=compScore(na);
-setScore(sc);
-setHist(prev=>[{date:today(),sit:“Urgence vitale”,score:sc,col:sc2col(sc)},…prev].slice(0,5));
-go(“score”);
-setAiLoading(true);
-delay(()=>makeAnalysis(na,sc),2000).then(t=>{setAiTxt(t);setAiLoading(false);});
-}
-};
-
-const doJournal=async()=>{
-if(!jIn.trim()||jLoad)return;
-const msg={r:“user”,t:jIn}; const newM=[…jMsgs,msg]; setJMsgs(newM);
-const inp=jIn; setJIn(””); setJLoad(true);
-const rep=await delay(()=>jMsgs.length===0?makeJournalReply(inp):makeChatReply(inp),1600);
-setJMsgs([…newM,{r:“ai”,t:rep}]); setJLoad(false);
-};
-
-const doChat=async()=>{
-if(!cIn.trim()||cLoad)return;
-const msg={r:“user”,t:cIn}; const newM=[…cMsgs,msg]; setCMsgs(newM);
-const inp=cIn; setCIn(””); setCLoad(true);
-const rep=await delay(()=>makeChatReply(inp),1200);
-setCMsgs([…newM,{r:“ai”,t:rep}]); setCLoad(false);
-};
-
-const sendGroup=async()=>{
-if(!gIn.trim())return;
-const msg={id:Date.now(),auth:anon?`IDE #${Math.floor(Math.random()*9)+1}`:name,txt:gIn,time,req:false};
-setGMsgs([…gMsgs,msg]); setGIn(””);
-};
-
-const requestDebrief=async()=>{
-const msg={id:Date.now(),auth:anon?“Un IDE du service”:name,txt:“Demande de débriefing collectif — Des situations difficiles ont été signalées. Un moment d’équipe serait bénéfique.”,time,req:true};
-setGMsgs([…gMsgs,msg]); setDebReq(true);
-};
-
-const gAvg=gSessions.length?Math.round(gSessions.reduce((s,h)=>s+h.score,0)/gSessions.length):null;
-const gHigh=gSessions.filter(s=>s.score>=70).length;
-const q=QS[qi];
-
-const card={background:C.card,border:`1px solid ${C.border}`,borderRadius:20,padding:18,backdropFilter:“blur(20px)”};
-const btnP={background:`linear-gradient(135deg,${C.blue},${C.blueD})`,color:”#fff”,border:“none”,borderRadius:14,padding:“14px 22px”,fontSize:15,fontWeight:700,cursor:“pointer”,width:“100%”,boxShadow:`0 4px 20px ${C.blue}33`};
-const btnS={background:“rgba(56,189,248,0.08)”,color:C.textB,border:`1px solid ${C.border}`,borderRadius:14,padding:“12px 18px”,fontSize:13,fontWeight:600,cursor:“pointer”,width:“100%”};
-
-return (
-<div style={{minHeight:“100dvh”,background:“linear-gradient(180deg,#050B17 0%,#020617 100%)”,fontFamily:”-apple-system,system-ui,sans-serif”,color:C.text,overflowX:“hidden”}}>
-
-```
-  {screen!=="login"&&(
-    <div style={{position:"sticky",top:0,zIndex:50,background:"rgba(2,6,23,0.9)",backdropFilter:"blur(20px)",borderBottom:`1px solid ${C.border}`,padding:"12px 20px"}}>
-      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",maxWidth:480,margin:"0 auto"}}>
-        <div style={{display:"flex",alignItems:"center",gap:10}}>
-          <div style={{width:36,height:36,borderRadius:11,background:`linear-gradient(135deg,${C.blue},${C.purple})`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,animation:"glow 3s infinite"}}>💙</div>
-          <div>
-            <div style={{display:"flex",alignItems:"center",gap:6}}>
-              <span style={{fontSize:17,fontWeight:700,letterSpacing:-0.5}}>StressoCare</span>
-              <span style={{fontSize:9,color:C.purple,background:"rgba(167,139,250,0.2)",padding:"2px 7px",borderRadius:20,fontWeight:700}}>IA</span>
-            </div>
-            <span style={{fontSize:10,color:C.textC}}>{name} · {role}</span>
-          </div>
-        </div>
-        {screen!=="home"&&<button onClick={()=>go("home")} style={{background:"rgba(56,189,248,0.1)",border:`1px solid ${C.border}`,color:C.blue,fontSize:11,fontWeight:600,padding:"7px 14px",borderRadius:100,cursor:"pointer"}}>← Accueil</button>}
-      </div>
-    </div>
-  )}
-
-  <div style={{maxWidth:480,margin:"0 auto",padding:"0 18px 100px",opacity:anim?1:0,transform:anim?"translateY(0)":"translateY(8px)",transition:"opacity 0.2s,transform 0.2s"}}>
-
-    {screen==="login"&&(
-      <div style={{display:"flex",flexDirection:"column",gap:20,padding:"40px 0"}}>
-        <div style={{textAlign:"center",padding:"20px 0"}}>
-          <div style={{fontSize:64,marginBottom:16,animation:"float 3s infinite"}}>💙</div>
-          <h1 style={{fontSize:28,fontWeight:800,letterSpacing:-1,marginBottom:8}}>StressoCare</h1>
-          <p style={{fontSize:14,color:C.textB,lineHeight:1.6}}>Votre assistant de soutien émotionnel post-urgence</p>
-        </div>
-        <div style={card}>
-          <p style={{fontSize:11,color:C.textC,fontWeight:600,textTransform:"uppercase",letterSpacing:1.5,marginBottom:10}}>Votre prénom</p>
-          <input value={nameIn} onChange={e=>setNameIn(e.target.value)} placeholder="Hugo"
-            style={{width:"100%",background:"rgba(56,189,248,0.06)",border:`1px solid ${C.border}`,borderRadius:12,padding:"13px 16px",color:C.text,fontSize:15,outline:"none",fontFamily:"inherit",marginBottom:18,boxSizing:"border-box"}}/>
-          <p style={{fontSize:11,color:C.textC,fontWeight:600,textTransform:"uppercase",letterSpacing:1.5,marginBottom:10}}>Votre rôle</p>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,marginBottom:22}}>
-            {["IDE","Cadre","AS"].map(r=>(
-              <button key={r} onClick={()=>setRoleIn(r)} style={{padding:"12px 4px",fontSize:13,fontWeight:600,borderRadius:12,border:`1.5px solid ${roleIn===r?C.blue:C.border}`,background:roleIn===r?"rgba(56,189,248,0.15)":"transparent",color:roleIn===r?C.blue:C.textC,cursor:"pointer"}}>{r}</button>
-            ))}
-          </div>
-          <button onClick={()=>{if(nameIn.trim()){setName(nameIn.trim());setRole(roleIn);go("home");}}} disabled={!nameIn.trim()} style={{...btnP,opacity:nameIn.trim()?1:0.5}}>
-            Commencer →
-          </button>
-        </div>
-        <p style={{fontSize:10,color:C.textD,textAlign:"center",lineHeight:1.6}}>Données locales et anonymisées · Créé dans le cadre d'un TIR infirmier</p>
-      </div>
-    )}
-
-    {screen==="home"&&(
-      <div style={{display:"flex",flexDirection:"column",gap:14,paddingTop:20}}>
-        <div style={{...card,background:"linear-gradient(135deg,rgba(56,189,248,0.07),rgba(167,139,250,0.07))",padding:22}}>
-          <p style={{fontSize:11,color:C.blue,fontWeight:700,textTransform:"uppercase",letterSpacing:2,marginBottom:8}}>Bonjour {name}</p>
-          <h2 style={{fontSize:22,fontWeight:700,lineHeight:1.25,marginBottom:8,letterSpacing:-0.5}}>Comment se passe votre journée ?</h2>
-          <p style={{fontSize:13,color:C.textB,lineHeight:1.6}}>Votre assistant IA est là pour vous accompagner après chaque urgence.</p>
-        </div>
-        <button onClick={()=>{setQi(0);setAns({});setAiTxt("");setScore(null);go("debrief");}} style={{...card,padding:18,cursor:"pointer",textAlign:"left",background:"linear-gradient(135deg,rgba(56,189,248,0.12),rgba(56,189,248,0.03))",border:`1px solid ${C.borderHi}`,display:"flex",alignItems:"center",gap:14}}>
-          <div style={{width:50,height:50,borderRadius:15,background:`linear-gradient(135deg,${C.blue},${C.blueD})`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,flexShrink:0}}>📋</div>
-          <div style={{flex:1}}><p style={{fontSize:15,fontWeight:700,marginBottom:3}}>Débriefing IA</p><p style={{fontSize:12,color:C.textB}}>5 questions · Analyse personnalisée</p></div>
-          <span style={{color:C.blue,fontSize:20}}>→</span>
-        </button>
-        <button onClick={()=>go("group")} style={{...card,padding:16,cursor:"pointer",textAlign:"left",background:"linear-gradient(135deg,rgba(167,139,250,0.1),rgba(52,211,153,0.05))",border:"1px solid rgba(167,139,250,0.3)",display:"flex",alignItems:"center",gap:12}}>
-          <div style={{width:46,height:46,borderRadius:14,background:`linear-gradient(135deg,${C.purple},${C.pink})`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,flexShrink:0}}>👥</div>
-          <div style={{flex:1}}><p style={{fontSize:14,fontWeight:700,marginBottom:2}}>Espace équipe</p><p style={{fontSize:12,color:C.textB}}>{gSessions.length>0?`${gSessions.length} sessions · Score moy. ${gAvg}/100`:"Tableau de bord · Soutien · Débriefing"}</p></div>
-          {gHigh>0&&<div style={{background:"rgba(248,113,113,0.2)",border:"1px solid rgba(248,113,113,0.4)",borderRadius:100,padding:"4px 10px"}}><span style={{fontSize:11,color:C.red,fontWeight:700}}>{gHigh} ⚠️</span></div>}
-          <span style={{color:C.purple,fontSize:20}}>→</span>
-        </button>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
-          {[
-            {icon:"🌬",lbl:"Respiration",desc:"3 min · 4-4-6",act:()=>{setBreathDone(false);go("breath");},col:C.green},
-            {icon:"💬",lbl:"Coach IA",desc:"Conversation",act:()=>go("chat"),col:C.purple},
-            {icon:"📓",lbl:"Journal",desc:"IA réflexive",act:()=>{setJMsgs([]);setJIn("");go("journal");},col:C.pink},
-            {icon:"📊",lbl:"Historique",desc:"Mon évolution",act:()=>go("history"),col:C.orange},
-          ].map((it,i)=>(
-            <button key={i} onClick={it.act} style={{...card,padding:16,cursor:"pointer",textAlign:"left"}}>
-              <div style={{width:40,height:40,borderRadius:12,background:`${it.col}22`,border:`1px solid ${it.col}40`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,marginBottom:10}}>{it.icon}</div>
-              <p style={{fontSize:14,fontWeight:700,marginBottom:2}}>{it.lbl}</p>
-              <p style={{fontSize:11,color:C.textC}}>{it.desc}</p>
-            </button>
-          ))}
-        </div>
-        {hist.length>0&&(
-          <div style={{...card,padding:14,display:"flex",alignItems:"center",gap:12,background:`linear-gradient(135deg,${sc2col(hist[0].score)}10,transparent)`,border:`1px solid ${sc2col(hist[0].score)}30`}}>
-            <span style={{fontSize:24}}>{hist[0].score<40?"✅":hist[0].score<70?"⚠️":"🔴"}</span>
-            <div><p style={{fontSize:13,fontWeight:600,color:sc2col(hist[0].score)}}>Dernière session — {hist[0].date}</p><p style={{fontSize:11,color:C.textC}}>{hist[0].sit} · Score {hist[0].score}/100</p></div>
-          </div>
-        )}
-      </div>
-    )}
-
-    {screen==="debrief"&&(
-      <div style={{display:"flex",flexDirection:"column",gap:18,paddingTop:20}}>
-        <div style={{display:"flex",gap:4}}>{QS.map((_,i)=><div key={i} style={{flex:1,height:4,borderRadius:4,background:i<=qi?`linear-gradient(90deg,${C.blue},${C.purple})`:C.textD,transition:"background 0.4s"}}/>)}</div>
-        <p style={{fontSize:12,color:C.textC,fontWeight:600}}>{qi+1} sur {QS.length}</p>
-        <div style={card}>
-          <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:18}}>
-            <span style={{fontSize:24}}>{q.icon}</span>
-            <p style={{fontSize:17,fontWeight:700,lineHeight:1.4,flex:1}}>{q.text}</p>
-          </div>
-          {q.type==="scale"&&(
-            <div style={{display:"flex",flexDirection:"column",gap:18}}>
-              <div style={{textAlign:"center",padding:"8px 0"}}><span style={{fontSize:64,fontWeight:200,color:C.blue,letterSpacing:-3}}>{slid}</span><span style={{fontSize:16,color:C.textC,marginLeft:6}}>/10</span></div>
-              <input type="range" min="1" max="10" value={slid} onChange={e=>setSlid(Number(e.target.value))} style={{width:"100%",accentColor:C.blue,height:6}}/>
-              <div style={{display:"flex",justifyContent:"space-between"}}><span style={{fontSize:11,color:C.textC}}>{q.min}</span><span style={{fontSize:11,color:C.textC}}>{q.max}</span></div>
-              <button style={btnP} onClick={()=>doAnswer(slid)}>Continuer →</button>
-            </div>
-          )}
-          {q.type==="choice"&&<div style={{display:"flex",flexDirection:"column",gap:10}}>{q.opts.map((o,i)=><button key={i} onClick={()=>doAnswer(i)} style={{background:"rgba(56,189,248,0.05)",border:`1px solid ${C.border}`,borderRadius:13,padding:"14px 16px",textAlign:"left",color:C.text,fontSize:14,cursor:"pointer"}}>{o}</button>)}</div>}
-          {q.type==="multi"&&(
-            <div style={{display:"flex",flexDirection:"column",gap:10}}>
-              {q.opts.map((o,i)=>{const sel=ans[q.id]?.includes(i);return<button key={i} onClick={()=>{const p=ans[q.id]||[];setAns({...ans,[q.id]:sel?p.filter(x=>x!==i):[...p,i]});}} style={{background:sel?"rgba(56,189,248,0.18)":"rgba(56,189,248,0.05)",border:`1.5px solid ${sel?C.blue:C.border}`,borderRadius:13,padding:"12px 16px",textAlign:"left",color:sel?C.blue:C.text,fontSize:14,cursor:"pointer",display:"flex",alignItems:"center",gap:10}}><div style={{width:18,height:18,borderRadius:6,border:`1.5px solid ${sel?C.blue:C.textD}`,background:sel?C.blue:"transparent",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{sel&&<span style={{color:"#000",fontSize:11,fontWeight:900}}>✓</span>}</div>{o}</button>;})}
-              <button style={{...btnP,marginTop:6}} onClick={()=>doAnswer(ans[q.id]||[])}>Continuer →</button>
-            </div>
-          )}
-          {q.type==="emoji"&&<div style={{display:"flex",justifyContent:"space-around",padding:"16px 0"}}>{q.opts.map((em,i)=><button key={i} onClick={()=>doAnswer(i)} style={{background:"none",border:"none",fontSize:42,cursor:"pointer",padding:8}}>{em}</button>)}</div>}
-        </div>
-      </div>
-    )}
-
-    {screen==="score"&&score!==null&&(
-      <div style={{display:"flex",flexDirection:"column",gap:16,paddingTop:20}}>
-        <div style={card}><p style={{fontSize:11,color:C.blue,fontWeight:700,textTransform:"uppercase",letterSpacing:2,marginBottom:18,textAlign:"center"}}>Votre score</p><Ring score={score}/></div>
-        <div style={{...card,background:"linear-gradient(135deg,rgba(167,139,250,0.1),rgba(56,189,248,0.05))",border:"1px solid rgba(167,139,250,0.3)"}}>
-          <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:14}}>
-            <div style={{width:34,height:34,borderRadius:10,background:`linear-gradient(135deg,${C.purple},${C.blue})`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16}}>✨</div>
-            <div><p style={{fontSize:14,fontWeight:700}}>Analyse IA</p><p style={{fontSize:11,color:C.purple}}>Personnalisée pour vous</p></div>
-          </div>
-          {aiLoading?(
-            <div style={{display:"flex",flexDirection:"column",gap:10}}>
-              <div style={{display:"flex",alignItems:"center",gap:8}}><div style={{width:14,height:14,border:`2px solid ${C.purple}`,borderTopColor:"transparent",borderRadius:"50%",animation:"spin 0.8s linear infinite"}}/><span style={{fontSize:12,color:C.textC}}>Analyse en cours...</span></div>
-              {[90,75,85,60].map((w,i)=><div key={i} style={{height:9,borderRadius:5,background:"rgba(167,139,250,0.15)",width:`${w}%`,animation:"pulse 1.5s infinite",animationDelay:`${i*0.15}s`}}/>)}
-            </div>
-          ):aiTxt?<p style={{fontSize:13,color:C.textB,lineHeight:1.75,whiteSpace:"pre-wrap"}}><TypeIn text={aiTxt}/></p>:null}
-        </div>
-        <div style={{...card,background:"linear-gradient(135deg,rgba(167,139,250,0.08),transparent)",border:"1px solid rgba(167,139,250,0.25)"}}>
-          <p style={{fontSize:13,fontWeight:700,marginBottom:8}}>Partager avec l'équipe</p>
-          <p style={{fontSize:12,color:C.textB,lineHeight:1.5,marginBottom:12}}>Contribuez aux statistiques de votre service.</p>
-          <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:14}}><Toggle on={anon} onChange={setAnon}/><span style={{fontSize:12,color:C.textB}}>Anonyme {anon?"(actif)":"(désactivé)"}</span></div>
-          <div style={{display:"flex",gap:10}}>
-            <button onClick={()=>{const e={id:Date.now(),date:today(),score,col:sc2col(score),auth:anon?`IDE #${Math.floor(Math.random()*9)+1}`:name};setGSessions(prev=>[e,...prev].slice(0,20));go("home");}} style={{...btnP,flex:1,padding:"11px 0",fontSize:13}}>Partager</button>
-            <button onClick={()=>go("home")} style={{...btnS,flex:1,padding:"11px 0",fontSize:13}}>Passer</button>
-          </div>
-        </div>
-        <button style={btnP} onClick={()=>{setBreathDone(false);go("breath");}}>🌬 Exercice de respiration</button>
-        <button style={btnS} onClick={()=>go("home")}>Retour à l'accueil</button>
-      </div>
-    )}
-
-    {screen==="breath"&&(
-      <div style={{display:"flex",flexDirection:"column",gap:16,paddingTop:20}}>
-        <div style={card}><p style={{fontSize:11,color:C.green,fontWeight:700,textTransform:"uppercase",letterSpacing:2,marginBottom:6}}>Cohérence cardiaque</p><p style={{fontSize:15,fontWeight:700,marginBottom:4}}>Respirez avec le cercle</p><p style={{fontSize:12,color:C.textB,lineHeight:1.6}}>3 cycles · Méthode 4-4-6 · 42 secondes</p></div>
-        <div style={card}>{!breathDone?<BreathOrb onDone={()=>setBreathDone(true)}/>:(
-          <div style={{textAlign:"center",padding:"36px 0"}}>
-            <div style={{fontSize:60,marginBottom:14,animation:"float 2s infinite"}}>✨</div>
-            <p style={{fontSize:18,fontWeight:700,color:C.green,marginBottom:10}}>Bien joué</p>
-            <p style={{fontSize:13,color:C.textB,lineHeight:1.7,marginBottom:24}}>Votre rythme cardiaque devrait se stabiliser. Prenez un moment pour ressentir ce calme.</p>
-            <button style={btnP} onClick={()=>go("home")}>Retour à l'accueil</button>
-          </div>
-        )}</div>
-      </div>
-    )}
-
-    {screen==="journal"&&(
-      <div style={{display:"flex",flexDirection:"column",gap:14,paddingTop:20}}>
-        <div style={{...card,background:"linear-gradient(135deg,rgba(244,114,182,0.1),transparent)",border:"1px solid rgba(244,114,182,0.3)",padding:16}}>
-          <div style={{display:"flex",alignItems:"center",gap:10}}>
-            <div style={{width:38,height:38,borderRadius:12,background:`linear-gradient(135deg,${C.pink},${C.purple})`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18}}>📓</div>
-            <div><p style={{fontSize:14,fontWeight:700}}>Journal réflexif</p><p style={{fontSize:11,color:C.pink}}>Confidentiel · Pratique réflexive</p></div>
-          </div>
-        </div>
-        <div style={{...card,padding:14,minHeight:260}}>
-          {jMsgs.length===0&&<p style={{fontSize:13,color:C.textC,fontStyle:"italic",marginBottom:10,lineHeight:1.6}}>Écrivez librement ce que vous avez vécu. L'IA vous répondra et poursuivra la conversation.</p>}
-          <div style={{display:"flex",flexDirection:"column",gap:10}}>
-            {jMsgs.map((m,i)=>(
-              <div key={i} style={{display:"flex",justifyContent:m.r==="user"?"flex-end":"flex-start"}}>
-                <div style={{maxWidth:"86%",background:m.r==="user"?`linear-gradient(135deg,${C.pink},${C.purple})`:"rgba(244,114,182,0.1)",color:m.r==="user"?"#fff":C.textB,padding:"10px 14px",borderRadius:m.r==="user"?"16px 16px 4px 16px":"16px 16px 16px 4px",fontSize:13,lineHeight:1.65,border:m.r==="user"?"none":"1px solid rgba(244,114,182,0.2)",whiteSpace:"pre-wrap"}}>
-                  {i===jMsgs.length-1&&m.r==="ai"?<TypeIn text={m.t}/>:m.t}
-                </div>
-              </div>
-            ))}
-            {jLoad&&<div style={{display:"flex",justifyContent:"flex-start"}}><div style={{background:"rgba(244,114,182,0.1)",padding:"10px 14px",borderRadius:"16px 16px 16px 4px",border:"1px solid rgba(244,114,182,0.2)"}}><Dots color={C.pink}/></div></div>}
-            <div ref={jEnd}/>
-          </div>
-        </div>
-        <div style={{display:"flex",gap:10,alignItems:"flex-end"}}>
-          <textarea value={jIn} onChange={e=>setJIn(e.target.value)} onKeyDown={e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();doJournal();}}} placeholder={jMsgs.length===0?"Aujourd'hui, j'ai vécu...":"Répondez à l'IA..."} rows={2}
-            style={{flex:1,background:C.cardSolid,border:"1px solid rgba(244,114,182,0.35)",borderRadius:16,padding:"12px 16px",color:C.text,fontSize:14,fontFamily:"inherit",resize:"none",outline:"none",lineHeight:1.5}}/>
-          <button onClick={doJournal} disabled={!jIn.trim()||jLoad} style={{width:46,height:46,borderRadius:"50%",background:`linear-gradient(135deg,${C.pink},${C.purple})`,border:"none",color:"#fff",fontSize:20,cursor:"pointer",flexShrink:0,opacity:!jIn.trim()||jLoad?0.5:1}}>↑</button>
-        </div>
-        {jMsgs.length===0&&<div style={{display:"flex",gap:8,flexWrap:"wrap"}}>{["J'ai vécu une urgence difficile","Je me sens épuisé","Je doute de moi"].map(s=><button key={s} onClick={()=>setJIn(s)} style={{fontSize:11,color:C.pink,background:"rgba(244,114,182,0.1)",border:"1px solid rgba(244,114,182,0.3)",padding:"6px 12px",borderRadius:100,cursor:"pointer"}}>{s}</button>)}</div>}
-        {jMsgs.length>0&&<button onClick={()=>setJMsgs([])} style={{...btnS,fontSize:12}}>Nouvelle entrée</button>}
-      </div>
-    )}
-
-    {screen==="chat"&&(
-      <div style={{display:"flex",flexDirection:"column",gap:14,paddingTop:20}}>
-        <div style={{...card,background:"linear-gradient(135deg,rgba(167,139,250,0.1),transparent)",border:"1px solid rgba(167,139,250,0.3)",padding:16}}>
-          <div style={{display:"flex",alignItems:"center",gap:10}}>
-            <div style={{width:38,height:38,borderRadius:12,background:`linear-gradient(135deg,${C.purple},${C.blue})`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18}}>💬</div>
-            <div><p style={{fontSize:14,fontWeight:700}}>Coach IA</p><p style={{fontSize:11,color:C.purple}}>En ligne · Confidentiel</p></div>
-          </div>
-        </div>
-        <div style={{...card,padding:14,minHeight:300}}>
-          <div style={{display:"flex",flexDirection:"column",gap:10}}>
-            {cMsgs.map((m,i)=>(
-              <div key={i} style={{display:"flex",justifyContent:m.r==="user"?"flex-end":"flex-start"}}>
-                <div style={{maxWidth:"84%",background:m.r==="user"?`linear-gradient(135deg,${C.blue},${C.blueD})`:"rgba(167,139,250,0.12)",color:m.r==="user"?"#fff":C.textB,padding:"10px 14px",borderRadius:m.r==="user"?"16px 16px 4px 16px":"16px 16px 16px 4px",fontSize:13,lineHeight:1.6,border:m.r==="user"?"none":"1px solid rgba(167,139,250,0.2)"}}>{m.t}</div>
-              </div>
-            ))}
-            {cLoad&&<div style={{display:"flex",justifyContent:"flex-start"}}><div style={{background:"rgba(167,139,250,0.12)",padding:"10px 14px",borderRadius:"16px 16px 16px 4px",border:"1px solid rgba(167,139,250,0.2)"}}><Dots color={C.purple}/></div></div>}
-            <div ref={cEnd}/>
-          </div>
-        </div>
-        <div style={{display:"flex",gap:10,alignItems:"center"}}>
-          <input type="text" value={cIn} onChange={e=>setCIn(e.target.value)} onKeyDown={e=>e.key==="Enter"&&doChat()} placeholder="Écrivez un message..."
-            style={{flex:1,background:C.cardSolid,border:`1px solid ${C.border}`,borderRadius:100,padding:"13px 18px",color:C.text,fontSize:14,outline:"none",fontFamily:"inherit"}}/>
-          <button onClick={doChat} disabled={!cIn.trim()||cLoad} style={{width:46,height:46,borderRadius:"50%",background:`linear-gradient(135deg,${C.blue},${C.purple})`,border:"none",color:"#fff",fontSize:20,cursor:"pointer",opacity:!cIn.trim()||cLoad?0.5:1}}>↑</button>
-        </div>
-        <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
-          {["Je me sens dépassé","Comment gérer mon stress","J'ai peur de mal faire"].map(s=><button key={s} onClick={()=>setCIn(s)} style={{fontSize:11,color:C.purple,background:"rgba(167,139,250,0.1)",border:"1px solid rgba(167,139,250,0.3)",padding:"6px 12px",borderRadius:100,cursor:"pointer"}}>{s}</button>)}
-        </div>
-      </div>
-    )}
-
-    {screen==="history"&&(
-      <div style={{display:"flex",flexDirection:"column",gap:14,paddingTop:20}}>
-        <div style={card}>
-          <p style={{fontSize:11,color:C.blue,fontWeight:700,textTransform:"uppercase",letterSpacing:2,marginBottom:14}}>Évolution du stress</p>
-          <div style={{display:"flex",alignItems:"flex-end",gap:8,height:110,marginBottom:12}}>
-            {[...hist].reverse().map((h,i)=>(
-              <div key={i} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:6}}>
-                <span style={{fontSize:11,fontWeight:700,color:h.col}}>{h.score}</span>
-                <div style={{width:"100%",height:Math.max(h.score*0.9,6),background:`linear-gradient(180deg,${h.col}60,${h.col}20)`,borderRadius:"8px 8px 0 0"}}/>
-                <span style={{fontSize:9,color:C.textC}}>{h.date.split(" ")[0]}</span>
-              </div>
-            ))}
-          </div>
-          {hist.length>=2&&(()=>{const diff=hist[0].score-hist[hist.length-1].score;return<p style={{fontSize:12,color:diff>0?C.red:C.green,textAlign:"center",fontWeight:600}}>{diff>0?`📈 +${diff} pts`:`📉 ${diff} pts`} depuis le début</p>;})()}
-        </div>
-        {hist.map((h,i)=>(
-          <div key={i} style={{...card,padding:14,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-            <div><p style={{fontSize:14,fontWeight:700}}>{h.sit}</p><p style={{fontSize:11,color:C.textC}}>{h.date}</p></div>
-            <div style={{background:`${h.col}20`,border:`1px solid ${h.col}40`,padding:"6px 14px",borderRadius:100}}>
-              <span style={{fontSize:14,fontWeight:700,color:h.col}}>{h.score}</span><span style={{fontSize:11,color:h.col,opacity:0.7}}>/100</span>
-            </div>
-          </div>
-        ))}
-        <div style={{...card,background:"linear-gradient(135deg,rgba(56,189,248,0.06),rgba(167,139,250,0.06))",border:`1px solid ${C.borderHi}`}}>
-          <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:12}}><span style={{fontSize:22}}>📧</span><div><p style={{fontSize:14,fontWeight:700}}>Envoyer à ma cadre</p><p style={{fontSize:11,color:C.textC}}>Compte rendu anonymisé</p></div></div>
-          <button onClick={()=>{
-            const lines=hist.map(h=>`* ${h.date} - ${h.sit} - Score: ${h.score}/100`).join("%0A");
-            const avg=Math.round(hist.reduce((s,h)=>s+h.score,0)/hist.length);
-            window.location.href=`mailto:?subject=${encodeURIComponent("StressoCare - Compte rendu")}&body=${encodeURIComponent(`Bonjour,\n\nCompte rendu StressoCare:\nSessions: ${hist.length} | Score moyen: ${avg}/100\n\nDétail:\n`)  }${lines}${encodeURIComponent("\n\nCordialement")}`;
-          }} style={btnP}>📧 Ouvrir dans Mail</button>
-          <button onClick={()=>{
-            const txt=hist.map(h=>`${h.date} - ${h.sit} - ${h.score}/100`).join("\n");
-            const avg=Math.round(hist.reduce((s,h)=>s+h.score,0)/hist.length);
-            if(navigator.share)navigator.share({title:"StressoCare",text:`StressoCare - Compte rendu\nSessions: ${hist.length} | Moy: ${avg}/100\n\n${txt}`});
-            else{navigator.clipboard?.writeText(`${hist.length} sessions | Moy: ${avg}/100\n${txt}`);alert("Copié !");}
-          }} style={{...btnS,marginTop:10}}>↗️ Partager autrement</button>
-        </div>
-      </div>
-    )}
-
-    {screen==="group"&&(
-      <div style={{display:"flex",flexDirection:"column",gap:14,paddingTop:20}}>
-        <div style={{...card,background:"linear-gradient(135deg,rgba(167,139,250,0.1),rgba(52,211,153,0.05))",border:"1px solid rgba(167,139,250,0.3)",padding:16}}>
-          <div style={{display:"flex",alignItems:"center",gap:10}}>
-            <div style={{width:40,height:40,borderRadius:12,background:`linear-gradient(135deg,${C.purple},${C.pink})`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20}}>👥</div>
-            <div><p style={{fontSize:15,fontWeight:700}}>Espace équipe</p><p style={{fontSize:11,color:C.purple}}>Données anonymisées · Partage entre collègues</p></div>
-          </div>
-        </div>
-        <div style={{display:"flex",gap:8}}>
-          {[{id:"dash",lbl:"📊 Tableau"},{id:"msgs",lbl:"💬 Soutien"},{id:"deb",lbl:"🔔 Débriefing"}].map(t=>(
-            <button key={t.id} onClick={()=>setGTab(t.id)} style={{flex:1,padding:"10px 4px",fontSize:12,fontWeight:600,borderRadius:12,border:`1px solid ${gTab===t.id?C.purple:C.border}`,background:gTab===t.id?"rgba(167,139,250,0.2)":"transparent",color:gTab===t.id?C.purple:C.textC,cursor:"pointer"}}>{t.lbl}</button>
-          ))}
-        </div>
-        {gTab==="dash"&&(
-          <div style={{display:"flex",flexDirection:"column",gap:12}}>
-            {gSessions.length===0?(
-              <div style={{...card,textAlign:"center",padding:36}}>
-                <p style={{fontSize:36,marginBottom:14}}>📊</p>
-                <p style={{fontSize:15,fontWeight:700,marginBottom:8}}>Aucune donnée partagée</p>
-                <p style={{fontSize:13,color:C.textC,lineHeight:1.6}}>Après un débriefing, partagez votre score pour alimenter ce tableau.</p>
-              </div>
-            ):(
-              <>
-                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10}}>
-                  {[{lbl:"Sessions",val:gSessions.length,col:C.blue},{lbl:"Score moy.",val:`${gAvg}/100`,col:sc2col(gAvg)},{lbl:"Stress élevé",val:gHigh,col:gHigh>0?C.red:C.green}].map((s,i)=>(
-                    <div key={i} style={{...card,padding:14,textAlign:"center"}}><p style={{fontSize:22,fontWeight:700,color:s.col,marginBottom:4}}>{s.val}</p><p style={{fontSize:10,color:C.textC,textTransform:"uppercase",letterSpacing:0.5}}>{s.lbl}</p></div>
-                  ))}
-                </div>
-                {gHigh>0&&<div style={{background:"rgba(248,113,113,0.1)",border:"1px solid rgba(248,113,113,0.3)",borderRadius:14,padding:"12px 16px"}}><p style={{fontSize:13,color:C.red,fontWeight:600}}>{gHigh} session(s) à stress élevé</p><p style={{fontSize:12,color:C.textB,marginTop:4}}>Un débriefing collectif serait recommandé.</p></div>}
-                <button onClick={()=>setGSessions([])} style={{...btnS,fontSize:12}}>Réinitialiser</button>
-              </>
-            )}
-          </div>
-        )}
-        {gTab==="msgs"&&(
-          <div style={{display:"flex",flexDirection:"column",gap:12}}>
-            <div style={{...card,padding:14,minHeight:240}}>
-              <div style={{display:"flex",flexDirection:"column",gap:10}}>
-                {gMsgs.filter(m=>!m.req).map((m,i)=>(
-                  <div key={i}><p style={{fontSize:10,color:C.textD,marginBottom:4,paddingLeft:4}}>{m.auth} · {m.time}</p><div style={{background:"rgba(167,139,250,0.1)",color:C.textB,padding:"10px 14px",borderRadius:"16px 16px 16px 4px",fontSize:13,lineHeight:1.55,border:"1px solid rgba(167,139,250,0.2)",maxWidth:"86%"}}>{m.txt}</div></div>
-                ))}
-                <div ref={gEnd}/>
-              </div>
-            </div>
-            <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>{SUPPORT.slice(0,3).map(s=><button key={s} onClick={()=>setGIn(s)} style={{fontSize:11,color:C.purple,background:"rgba(167,139,250,0.1)",border:"1px solid rgba(167,139,250,0.3)",padding:"6px 12px",borderRadius:100,cursor:"pointer"}}>{s}</button>)}</div>
-            <div style={{display:"flex",alignItems:"center",gap:10}}><Toggle on={anon} onChange={setAnon}/><span style={{fontSize:12,color:C.textB}}>Anonyme {anon?"(actif)":"(désactivé)"}</span></div>
-            <div style={{display:"flex",gap:10,alignItems:"center"}}>
-              <input type="text" value={gIn} onChange={e=>setGIn(e.target.value)} onKeyDown={e=>e.key==="Enter"&&sendGroup()} placeholder="Message à l'équipe..." style={{flex:1,background:C.cardSolid,border:"1px solid rgba(167,139,250,0.35)",borderRadius:100,padding:"13px 18px",color:C.text,fontSize:14,outline:"none",fontFamily:"inherit"}}/>
-              <button onClick={sendGroup} disabled={!gIn.trim()} style={{width:46,height:46,borderRadius:"50%",background:`linear-gradient(135deg,${C.purple},${C.pink})`,border:"none",color:"#fff",fontSize:20,cursor:"pointer",opacity:!gIn.trim()?0.5:1}}>↑</button>
-            </div>
-          </div>
-        )}
-        {gTab==="deb"&&(
-          <div style={{display:"flex",flexDirection:"column",gap:12}}>
-            <div style={{...card,background:"linear-gradient(135deg,rgba(251,146,60,0.1),transparent)",border:"1px solid rgba(251,146,60,0.3)"}}>
-              <p style={{fontSize:14,fontWeight:700,marginBottom:8}}>Demander un débriefing collectif</p>
-              <p style={{fontSize:13,color:C.textB,lineHeight:1.65,marginBottom:14}}>Signalez à votre cadre qu'un moment collectif serait bénéfique.</p>
-              <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:16}}><Toggle on={anon} onChange={setAnon}/><span style={{fontSize:12,color:C.textB}}>Anonyme {anon?"(actif)":"(désactivé)"}</span></div>
-              {!debReq?(
-                <button onClick={requestDebrief} style={{...btnP,background:`linear-gradient(135deg,${C.orange},#EA580C)`}}>Envoyer la demande</button>
-              ):(
-                <div style={{background:"rgba(52,211,153,0.1)",border:"1px solid rgba(52,211,153,0.3)",borderRadius:12,padding:"14px 18px",textAlign:"center"}}>
-                  <p style={{fontSize:14,fontWeight:700,color:C.green}}>Demande envoyée ✅</p>
-                  <p style={{fontSize:12,color:C.textB,marginTop:6}}>Votre cadre a été notifié dans l'espace messages.</p>
-                </div>
-              )}
-            </div>
-            <div style={{...card,background:"linear-gradient(135deg,rgba(56,189,248,0.06),transparent)",border:`1px solid ${C.border}`}}>
-              <p style={{fontSize:13,fontWeight:700,color:C.blue,marginBottom:8}}>Pourquoi un débriefing collectif ?</p>
-              <p style={{fontSize:12,color:C.textB,lineHeight:1.75}}>Selon Edmondson, la sécurité psychologique d'équipe se construit dans ces espaces de parole partagée. Un débriefing après une urgence difficile réduit le stress résiduel et renforce la cohésion.</p>
-            </div>
-          </div>
-        )}
-      </div>
-    )}
-
-  </div>
-
-  {screen!=="login"&&(
-    <div style={{position:"fixed",bottom:0,left:0,right:0,background:"rgba(2,6,23,0.95)",backdropFilter:"blur(20px)",borderTop:`1px solid ${C.border}`,paddingBottom:"env(safe-area-inset-bottom)"}}>
-      <div style={{display:"flex",maxWidth:480,margin:"0 auto"}}>
-        {[
-          {icon:"🏠",lbl:"Accueil",scr:"home"},
-          {icon:"📋",lbl:"Débrief",scr:"debrief"},
-          {icon:"💬",lbl:"Coach",scr:"chat"},
-          {icon:"👥",lbl:"Équipe",scr:"group"},
-          {icon:"📊",lbl:"Historique",scr:"history"},
-        ].map(it=>(
-          <button key={it.scr} onClick={()=>{if(it.scr==="debrief"){setQi(0);setAns({});setAiTxt("");setScore(null);}go(it.scr);}} style={{flex:1,padding:"10px 0",background:"transparent",border:"none",cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:3}}>
-            <span style={{fontSize:20}}>{it.icon}</span>
-            <span style={{fontSize:9,color:screen===it.scr?C.blue:C.textC,fontWeight:screen===it.scr?700:400,transition:"color 0.2s"}}>{it.lbl}</span>
-            {screen===it.scr&&<div style={{width:4,height:4,borderRadius:"50%",background:C.blue}}/>}
-          </button>
-        ))}
-      </div>
-    </div>
-  )}
-</div>
-```
-
-);
+function renderChat(){
+const div=h(‘div’,{style:{display:‘flex’,flexDirection:‘column’,gap:‘14px’,paddingTop:‘20px’}});
+div.appendChild(h(‘div’,{className:‘card’,style:{background:‘linear-gradient(135deg,rgba(167,139,250,0.1),transparent)’,border:‘1px solid rgba(167,139,250,0.3)’,padding:‘16px’}},h(‘div’,{style:{display:‘flex’,alignItems:‘center’,gap:‘10px’}},h(‘div’,{style:{width:‘38px’,height:‘38px’,borderRadius:‘12px’,background:‘linear-gradient(135deg,#A78BFA,#38BDF8)’,display:‘flex’,alignItems:‘center’,justifyContent:‘center’,fontSize:‘18px’}},‘💬’),h(‘div’,{},h(‘p’,{style:{fontSize:‘14px’,fontWeight:‘700’,color:’#F0F9FF’}},‘Coach IA’),h(‘p’,{style:{fontSize:‘11px’,color:’#A78BFA’}},‘En ligne · Confidentiel’)))));
+const msgs=h(‘div’,{className:‘card’,style:{padding:‘14px’,minHeight:‘260px’,display:‘flex’,flexDirection:‘column’,gap:‘10px’}});
+S.cMsgs.forEach(m=>{const row=h(‘div’,{style:{display:‘flex’,justifyContent:m.r===‘user’?‘flex-end’:‘flex-start’}});row.appendChild(h(‘div’,{className:m.r===‘user’?‘bubble-user’:‘bubble-ai’},m.t));msgs.appendChild(row);});
+if(S.cLoad){const row=h(‘div’,{style:{display:‘flex’,justifyContent:‘flex-start’}});const dots=h(‘div’,{className:‘bubble-ai’,style:{display:‘flex’,gap:‘4px’,alignItems:‘center’}});[0,200,400].forEach(d=>{dots.appendChild(h(‘div’,{style:{width:‘7px’,height:‘7px’,borderRadius:‘50%’,background:’#A78BFA’,animation:‘pulse 1.2s infinite’,animationDelay:d+‘ms’}}));});row.appendChild(dots);msgs.appendChild(row);}
+div.appendChild(msgs);
+const inputRow=h(‘div’,{style:{display:‘flex’,gap:‘10px’,alignItems:‘center’}});
+const inp=h(‘input’,{type:‘text’,placeholder:‘Ecrivez un message…’,style:{flex:‘1’,borderRadius:‘100px’},onInput:e=>S.cIn=e.target.value});
+inp.value=S.cIn;inp.addEventListener(‘keydown’,e=>{if(e.key===‘Enter’)doChat();});
+inputRow.appendChild(inp);inputRow.appendChild(h(‘button’,{style:{width:‘46px’,height:‘46px’,borderRadius:‘50%’,background:‘linear-gradient(135deg,#38BDF8,#A78BFA)’,border:‘none’,color:’#fff’,fontSize:‘20px’,cursor:‘pointer’,flexShrink:‘0’},onClick:doChat},‘↑’));
+div.appendChild(inputRow);
+const chips=h(‘div’,{style:{display:‘flex’,gap:‘8px’,flexWrap:‘wrap’}});
+[“Je me sens depasse”,“Comment gerer mon stress”,“J’ai peur de mal faire”].forEach(s=>chips.appendChild(h(‘button’,{className:‘chip’,onClick:()=>{S.cIn=s;render();}},s)));
+div.appendChild(chips);return div;
 }
 
-ReactDOM.createRoot(document.getElementById(“root”)).render(<App/>);
+async function doChat(){if(!S.cIn.trim()||S.cLoad)return;const inp=S.cIn;S.cMsgs=[…S.cMsgs,{r:‘user’,t:inp}];S.cIn=’’;S.cLoad=true;render();const rep=await delay(()=>makeReply(inp),1200);S.cMsgs=[…S.cMsgs,{r:‘ai’,t:rep}];S.cLoad=false;render();}
+
+function renderHistory(){
+const div=h(‘div’,{style:{display:‘flex’,flexDirection:‘column’,gap:‘14px’,paddingTop:‘20px’}});
+const chart=h(‘div’,{className:‘card’});
+chart.appendChild(h(‘p’,{style:{fontSize:‘11px’,color:’#38BDF8’,fontWeight:‘700’,textTransform:‘uppercase’,letterSpacing:‘2px’,marginBottom:‘14px’}},‘Evolution du stress’));
+const bars=h(‘div’,{style:{display:‘flex’,alignItems:‘flex-end’,gap:‘8px’,height:‘100px’,marginBottom:‘12px’}});
+[…S.hist].reverse().forEach(hh=>{const col=sc2col(hh.score);bars.appendChild(h(‘div’,{style:{flex:‘1’,display:‘flex’,flexDirection:‘column’,alignItems:‘center’,gap:‘6px’}},h(‘span’,{style:{fontSize:‘11px’,fontWeight:‘700’,color:col}},’’+hh.score),h(‘div’,{style:{width:‘100%’,height:Math.max(hh.score*0.9,6)+‘px’,background:‘linear-gradient(180deg,’+col+‘60,’+col+‘20)’,borderRadius:‘8px 8px 0 0’}}),h(‘span’,{style:{fontSize:‘9px’,color:’#64748B’}},hh.date.split(’ ‘)[0])));});
+chart.appendChild(bars);div.appendChild(chart);
+S.hist.forEach(hh=>{const col=sc2col(hh.score);div.appendChild(h(‘div’,{className:‘card’,style:{padding:‘14px’,display:‘flex’,alignItems:‘center’,justifyContent:‘space-between’}},h(‘div’,{},h(‘p’,{style:{fontSize:‘14px’,fontWeight:‘700’,color:’#F0F9FF’}},hh.sit),h(‘p’,{style:{fontSize:‘11px’,color:’#64748B’}},hh.date)),h(‘div’,{style:{background:col+‘20’,border:‘1px solid ‘+col+‘40’,padding:‘6px 14px’,borderRadius:‘100px’}},h(‘span’,{style:{fontSize:‘14px’,fontWeight:‘700’,color:col}},’’+hh.score),h(‘span’,{style:{fontSize:‘11px’,color:col,opacity:‘0.7’}},’/100’))));});
+div.appendChild(h(‘button’,{className:‘btn-primary’,onClick:()=>{const avg=Math.round(S.hist.reduce((a,b)=>a+b.score,0)/S.hist.length);const lines=S.hist.map(h=>h.date+’ - ‘+h.sit+’ - ‘+h.score+’/100’).join(’%0A’);window.location.href=‘mailto:?subject=StressoCare%20-%20Compte%20rendu&body=Sessions:%20’+S.hist.length+’%20%7C%20Moy:%20’+avg+’/100%0A%0A’+lines;}},‘📧 Envoyer a ma cadre’));
+return div;
+}
+
+function renderGroup(){
+const div=h(‘div’,{style:{display:‘flex’,flexDirection:‘column’,gap:‘14px’,paddingTop:‘20px’}});
+div.appendChild(h(‘div’,{className:‘card’,style:{background:‘linear-gradient(135deg,rgba(167,139,250,0.1),rgba(52,211,153,0.05))’,border:‘1px solid rgba(167,139,250,0.3)’,padding:‘16px’}},h(‘div’,{style:{display:‘flex’,alignItems:‘center’,gap:‘10px’}},h(‘div’,{style:{width:‘40px’,height:‘40px’,borderRadius:‘12px’,background:‘linear-gradient(135deg,#A78BFA,#F472B6)’,display:‘flex’,alignItems:‘center’,justifyContent:‘center’,fontSize:‘20px’}},‘👥’),h(‘div’,{},h(‘p’,{style:{fontSize:‘15px’,fontWeight:‘700’,color:’#F0F9FF’}},‘Espace equipe’),h(‘p’,{style:{fontSize:‘11px’,color:’#A78BFA’}},‘Donnees anonymisees’)))));
+const tabs=h(‘div’,{style:{display:‘flex’,gap:‘8px’}});
+[{id:‘dash’,lbl:‘📊 Tableau’},{id:‘msgs’,lbl:‘💬 Soutien’},{id:‘deb’,lbl:‘🔔 Debriefing’}].forEach(t=>tabs.appendChild(h(‘button’,{style:{flex:‘1’,padding:‘10px 4px’,fontSize:‘12px’,fontWeight:‘600’,borderRadius:‘12px’,border:‘1px solid ‘+(S.gTab===t.id?’#A78BFA’:‘rgba(56,189,248,0.15)’),background:S.gTab===t.id?‘rgba(167,139,250,0.2)’:‘transparent’,color:S.gTab===t.id?’#A78BFA’:’#64748B’,cursor:‘pointer’,fontFamily:‘inherit’},onClick:()=>{S.gTab=t.id;render();}},t.lbl)));
+div.appendChild(tabs);
+if(S.gTab===‘dash’)div.appendChild(h(‘div’,{className:‘card’,style:{textAlign:‘center’,padding:‘32px’}},h(‘p’,{style:{fontSize:‘36px’,marginBottom:‘14px’}},‘📊’),h(‘p’,{style:{fontSize:‘15px’,fontWeight:‘700’,marginBottom:‘8px’,color:’#F0F9FF’}},‘Aucune donnee partagee’),h(‘p’,{style:{fontSize:‘13px’,color:’#64748B’,lineHeight:‘1.6’}},“Apres un debriefing, partagez votre score pour alimenter ce tableau.”)));
+if(S.gTab===‘msgs’){
+const msgsBox=h(‘div’,{className:‘card’,style:{padding:‘14px’,minHeight:‘200px’,display:‘flex’,flexDirection:‘column’,gap:‘10px’}});
+S.gMsgs.filter(m=>!m.req).forEach(m=>{msgsBox.appendChild(h(‘div’,{},h(‘p’,{style:{fontSize:‘10px’,color:’#334155’,marginBottom:‘4px’,paddingLeft:‘4px’}},m.auth+’ · ‘+m.time),h(‘div’,{className:‘bubble-ai’,style:{maxWidth:‘86%’}},m.txt)));});
+div.appendChild(msgsBox);
+const chips=h(‘div’,{style:{display:‘flex’,gap:‘8px’,flexWrap:‘wrap’}});
+[‘Prends soin de toi 💙’,‘Courage !’,‘On est la !’].forEach(s=>chips.appendChild(h(‘button’,{className:‘chip’,onClick:()=>{S.gIn=s;render();}},s)));
+div.appendChild(chips);
+const aRow=h(‘div’,{style:{display:‘flex’,alignItems:‘center’,gap:‘10px’}});
+const tog=h(‘button’,{style:{width:‘40px’,height:‘22px’,borderRadius:‘100px’,background:S.anon?’#A78BFA’:’#334155’,border:‘none’,cursor:‘pointer’,position:‘relative’,transition:‘background 0.3s’},onClick:()=>{S.anon=!S.anon;render();}},h(‘div’,{style:{position:‘absolute’,top:‘3px’,left:S.anon?‘20px’:‘3px’,width:‘16px’,height:‘16px’,borderRadius:‘50%’,background:’#fff’,transition:‘left 0.3s’}}));
+aRow.appendChild(tog);aRow.appendChild(h(‘span’,{style:{fontSize:‘12px’,color:’#CBD5E1’}},‘Anonyme ‘+(S.anon?’(actif)’:’(desactive)’)));div.appendChild(aRow);
+const ir=h(‘div’,{style:{display:‘flex’,gap:‘10px’,alignItems:‘center’}});
+const inp=h(‘input’,{type:‘text’,placeholder:“Message a l’equipe…”,style:{flex:‘1’,borderRadius:‘100px’,borderColor:‘rgba(167,139,250,0.35)’},onInput:e=>S.gIn=e.target.value});
+inp.value=S.gIn;inp.addEventListener(‘keydown’,e=>{if(e.key===‘Enter’)sendGroup();});
+ir.appendChild(inp);ir.appendChild(h(‘button’,{style:{width:‘46px’,height:‘46px’,borderRadius:‘50%’,background:‘linear-gradient(135deg,#A78BFA,#F472B6)’,border:‘none’,color:’#fff’,fontSize:‘20px’,cursor:‘pointer’,flexShrink:‘0’},onClick:sendGroup},‘↑’));div.appendChild(ir);
+}
+if(S.gTab===‘deb’){
+const debCard=h(‘div’,{className:‘card’,style:{background:‘linear-gradient(135deg,rgba(251,146,60,0.1),transparent)’,border:‘1px solid rgba(251,146,60,0.3)’}});
+debCard.appendChild(h(‘p’,{style:{fontSize:‘14px’,fontWeight:‘700’,marginBottom:‘8px’,color:’#F0F9FF’}},‘Demander un debriefing collectif’));
+debCard.appendChild(h(‘p’,{style:{fontSize:‘13px’,color:’#CBD5E1’,lineHeight:‘1.65’,marginBottom:‘14px’}},“Signalez a votre cadre qu’un moment collectif serait benefique.”));
+if(!S.debReq)debCard.appendChild(h(‘button’,{className:‘btn-primary’,style:{background:‘linear-gradient(135deg,#FB923C,#EA580C)’},onClick:()=>{S.debReq=true;render();}},‘Envoyer la demande’));
+else debCard.appendChild(h(‘div’,{style:{background:‘rgba(52,211,153,0.1)’,border:‘1px solid rgba(52,211,153,0.3)’,borderRadius:‘12px’,padding:‘14px’,textAlign:‘center’}},h(‘p’,{style:{fontSize:‘14px’,fontWeight:‘700’,color:’#34D399’}},‘Demande envoyee ✅’)));
+div.appendChild(debCard);
+}
+return div;
+}
+
+function sendGroup(){if(!S.gIn.trim())return;S.gMsgs=[…S.gMsgs,{auth:S.anon?‘IDE #’+(Math.floor(Math.random()*9)+1):S.name,txt:S.gIn,time:S.time,req:false}];S.gIn=’’;render();}
+
+setInterval(()=>{const d=new Date();S.time=d.getHours()+’:’+String(d.getMinutes()).padStart(2,‘0’);},30000);
+render();
 </script>
 
 </body>
